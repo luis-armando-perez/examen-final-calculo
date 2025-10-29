@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Distribuciones Discretas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script
+      type="text/javascript"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+    ></script>
+    <style>
+      .input-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+      /* Estilos para el Modal */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 25px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 30px;
+        font-weight: bold;
+      }
+      .close-btn:hover {
+        color: #000;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 p-6">
+    <div
+      id="navBar"
+      class="bg-white shadow-md fixed w-full z-20 top-0 left-0"
+    ></div>
+
+    <div class="mt-16">
+      <h1
+        class="text-4xl font-extrabold text-center text-blue-800 mb-8 border-b pb-3"
+      >
+        Distribuciones de Variables Aleatorias Discretas
+      </h1>
+
+      <div id="principal" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div
+          id="card-bernoulli"
+          class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full"
+        >
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-2xl font-bold text-gray-800">Bernoulli</h2>
+            <button
+              id="bernoulli-info-btn"
+              data-info-key="bernoulli"
+              class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+            >
+              ℹ️
+            </button>
+          </div>
+          <div class="space-y-3 mb-4">
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad de éxito (p)</label
+              >
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                max="1"
+                id="bernoulli-input-p"
+                class="mt-1 block w-full"
+              />
+            </div>
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Valor de x (0 o 1)</label
+              >
+              <input
+                type="number"
+                step="1"
+                min="0"
+                max="1"
+                id="bernoulli-input-x"
+                class="mt-1 block w-full"
+                placeholder="x"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-4 mb-4">
+            <div class="flex-grow">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad P(X=x)</label
+              >
+              <input
+                type="text"
+                id="bernoulli-result-px"
+                class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono"
+                readonly
+                placeholder="P"
+              />
+            </div>
+          </div>
+          <button
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150"
+            id="bernoulli-calc-btn"
+          >
+            Calcular
+          </button>
+          <div class="mt-4 pt-4 border-t flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              Resultados:
+            </h3>
+            <p class="text-sm font-mono text-gray-900">
+              E[X]: <span id="bernoulli-result-ex" class="font-bold">---</span>
+            </p>
+            <p class="text-sm font-mono text-gray-900">
+              Var(X):
+              <span id="bernoulli-result-varx" class="font-bold">---</span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="card-binomial"
+          class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full"
+        >
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-2xl font-bold text-gray-800">Binomial</h2>
+            <button
+              id="binomial-info-btn"
+              data-info-key="binomial"
+              class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+            >
+              ℹ️
+            </button>
+          </div>
+          <div class="space-y-3 mb-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Ensayos (n)</label
+                >
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  id="binomial-input-n"
+                  class="mt-1 block w-full"
+                />
+              </div>
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Prob. éxito (p)</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="1"
+                  id="binomial-input-p"
+                  class="mt-1 block w-full"
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Valor de x (k) (éxitos)</label
+              >
+              <input
+                type="number"
+                step="1"
+                min="0"
+                id="binomial-input-x"
+                class="mt-1 block w-full"
+                placeholder="x (0 ≤ x ≤ n)"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-4 mb-4">
+            <div class="flex-grow">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad P(X=x)</label
+              >
+              <input
+                type="text"
+                id="binomial-result-px"
+                class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono"
+                readonly
+                placeholder="P"
+              />
+            </div>
+          </div>
+          <button
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150"
+            id="binomial-calc-btn"
+          >
+            Calcular
+          </button>
+          <div class="mt-4 pt-4 border-t flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              Resultados:
+            </h3>
+            <p class="text-sm font-mono text-gray-900">
+              E[X]: <span id="binomial-result-ex" class="font-bold">---</span>
+            </p>
+            <p class="text-sm font-mono text-gray-900">
+              Var(X):
+              <span id="binomial-result-varx" class="font-bold">---</span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="card-geometrica"
+          class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full"
+        >
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-2xl font-bold text-gray-800">Geométrica</h2>
+            <button
+              id="geometrica-info-btn"
+              data-info-key="geometrica"
+              class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+            >
+              ℹ️
+            </button>
+          </div>
+          <div class="space-y-3 mb-4">
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad de éxito (p)</label
+              >
+              <input
+                type="number"
+                step="0.01"
+                min="0"
+                max="1"
+                id="geometrica-input-p"
+                class="mt-1 block w-full"
+              />
+            </div>
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Valor de x (k) (ensayo del 1er éxito)</label
+              >
+              <input
+                type="number"
+                step="1"
+                min="1"
+                id="geometrica-input-x"
+                class="mt-1 block w-full"
+                placeholder="x (x ≥ 1)"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-4 mb-4">
+            <div class="flex-grow">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad P(X=x)</label
+              >
+              <input
+                type="text"
+                id="geometrica-result-px"
+                class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono"
+                readonly
+                placeholder="P"
+              />
+            </div>
+          </div>
+          <button
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150"
+            id="geometrica-calc-btn"
+          >
+            Calcular
+          </button>
+          <div class="mt-4 pt-4 border-t flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              Resultados:
+            </h3>
+            <p class="text-sm font-mono text-gray-900">
+              E[X]: <span id="geometrica-result-ex" class="font-bold">---</span>
+            </p>
+            <p class="text-sm font-mono text-gray-900">
+              Var(X):
+              <span id="geometrica-result-varx" class="font-bold">---</span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="card-binomialNegativa"
+          class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full"
+        >
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-2xl font-bold text-gray-800">
+              Binomial Negativa (Ensayos)
+            </h2>
+            <button
+              id="binomialNegativa-info-btn"
+              data-info-key="binomialNegativa"
+              class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+            >
+              ℹ️
+            </button>
+          </div>
+          <div class="space-y-3 mb-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Éxitos deseados (r)</label
+                >
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  id="binomialNegativa-input-r"
+                  class="mt-1 block w-full"
+                />
+              </div>
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Prob. éxito (p)</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="1"
+                  id="binomialNegativa-input-p"
+                  class="mt-1 block w-full"
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Valor de x (k) (ensayo del éxito r)</label
+              >
+              <input
+                type="number"
+                step="1"
+                min="1"
+                id="binomialNegativa-input-x"
+                class="mt-1 block w-full"
+                placeholder="x (x ≥ r)"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-4 mb-4">
+            <div class="flex-grow">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad P(X=x)</label
+              >
+              <input
+                type="text"
+                id="binomialNegativa-result-px"
+                class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono"
+                readonly
+                placeholder="P"
+              />
+            </div>
+          </div>
+          <button
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150"
+            id="binomialNegativa-calc-btn"
+          >
+            Calcular
+          </button>
+          <div class="mt-4 pt-4 border-t flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              Resultados:
+            </h3>
+            <p class="text-sm font-mono text-gray-900">
+              E[X]:
+              <span id="binomialNegativa-result-ex" class="font-bold">---</span>
+            </p>
+            <p class="text-sm font-mono text-gray-900">
+              Var(X):
+              <span id="binomialNegativa-result-varx" class="font-bold"
+                >---</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="card-binomialNegativaFracasos"
+          class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-purple-500 flex flex-col h-full"
+        >
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-2xl font-bold text-gray-800">
+              Binomial Negativa (Fracasos)
+            </h2>
+            <button
+              id="binomialNegativaFracasos-info-btn"
+              data-info-key="binomialNegativaFracasos"
+              class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+            >
+              ℹ️
+            </button>
+          </div>
+          <div class="space-y-3 mb-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Éxitos deseados (r)</label
+                >
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  id="binomialNegativaFracasos-input-r"
+                  class="mt-1 block w-full"
+                />
+              </div>
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Prob. éxito (p)</label
+                >
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  max="1"
+                  id="binomialNegativaFracasos-input-p"
+                  class="mt-1 block w-full"
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Valor de x (k) (fracasos antes de r)</label
+              >
+              <input
+                type="number"
+                step="1"
+                min="0"
+                id="binomialNegativaFracasos-input-x"
+                class="mt-1 block w-full"
+                placeholder="x (x ≥ 0)"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-4 mb-4">
+            <div class="flex-grow">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad P(X=x)</label
+              >
+              <input
+                type="text"
+                id="binomialNegativaFracasos-result-px"
+                class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono"
+                readonly
+                placeholder="P"
+              />
+            </div>
+          </div>
+          <button
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150"
+            id="binomialNegativaFracasos-calc-btn"
+          >
+            Calcular
+          </button>
+          <div class="mt-4 pt-4 border-t flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              Resultados:
+            </h3>
+            <p class="text-sm font-mono text-gray-900">
+              E[X]:
+              <span id="binomialNegativaFracasos-result-ex" class="font-bold"
+                >---</span
+              >
+            </p>
+            <p class="text-sm font-mono text-gray-900">
+              Var(X):
+              <span id="binomialNegativaFracasos-result-varx" class="font-bold"
+                >---</span
+              >
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="card-poisson"
+          class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full"
+        >
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-2xl font-bold text-gray-800">Poisson</h2>
+            <button
+              id="poisson-info-btn"
+              data-info-key="poisson"
+              class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+            >
+              ℹ️
+            </button>
+          </div>
+          <div class="space-y-3 mb-4">
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Tasa media (λ)</label
+              >
+              <input
+                type="number"
+                step="0.01"
+                min="0.001"
+                id="poisson-input-lambda"
+                class="mt-1 block w-full"
+              />
+            </div>
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Número de eventos (x)</label
+              >
+              <input
+                type="number"
+                step="1"
+                min="0"
+                id="poisson-input-x"
+                class="mt-1 block w-full"
+                placeholder="x (x ≥ 0)"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-4 mb-4">
+            <div class="flex-grow">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad P(X=x)</label
+              >
+              <input
+                type="text"
+                id="poisson-result-px"
+                class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono"
+                readonly
+                placeholder="P"
+              />
+            </div>
+          </div>
+          <button
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150"
+            id="poisson-calc-btn"
+          >
+            Calcular
+          </button>
+          <div class="mt-4 pt-4 border-t flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              Resultados:
+            </h3>
+            <p class="text-sm font-mono text-gray-900">
+              E[X]: <span id="poisson-result-ex" class="font-bold">---</span>
+            </p>
+            <p class="text-sm font-mono text-gray-900">
+              Var(X):
+              <span id="poisson-result-varx" class="font-bold">---</span>
+            </p>
+          </div>
+        </div>
+
+        <div
+          id="card-hipergeometrica"
+          class="bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full"
+        >
+          <div class="flex justify-between items-center mb-4 border-b pb-2">
+            <h2 class="text-2xl font-bold text-gray-800">Hipergeométrica</h2>
+            <button
+              id="hipergeometrica-info-btn"
+              data-info-key="hipergeometrica"
+              class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+            >
+              ℹ️
+            </button>
+          </div>
+          <div class="space-y-3 mb-4">
+            <div class="grid grid-cols-3 gap-3">
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Población (N)</label
+                >
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  id="hipergeometrica-input-N"
+                  class="mt-1 block w-full"
+                />
+              </div>
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Éxitos en N (K)</label
+                >
+                <input
+                  type="number"
+                  step="1"
+                  min="0"
+                  id="hipergeometrica-input-K"
+                  class="mt-1 block w-full"
+                />
+              </div>
+              <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700"
+                  >Muestra (n)</label
+                >
+                <input
+                  type="number"
+                  step="1"
+                  min="1"
+                  id="hipergeometrica-input-n"
+                  class="mt-1 block w-full"
+                />
+              </div>
+            </div>
+            <div class="input-group">
+              <label class="block text-sm font-medium text-gray-700"
+                >Número de éxitos en muestra (x)</label
+              >
+              <input
+                type="number"
+                step="1"
+                min="0"
+                id="hipergeometrica-input-x"
+                class="mt-1 block w-full"
+                placeholder="x (min ≤ x ≤ max)"
+              />
+            </div>
+          </div>
+          <div class="flex space-x-4 mb-4">
+            <div class="flex-grow">
+              <label class="block text-sm font-medium text-gray-700"
+                >Probabilidad P(X=x)</label
+              >
+              <input
+                type="text"
+                id="hipergeometrica-result-px"
+                class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono"
+                readonly
+                placeholder="P"
+              />
+            </div>
+          </div>
+          <button
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150"
+            id="hipergeometrica-calc-btn"
+          >
+            Calcular
+          </button>
+          <div class="mt-4 pt-4 border-t flex-grow">
+            <h3 class="text-lg font-semibold text-gray-700 mb-2">
+              Resultados:
+            </h3>
+            <p class="text-sm font-mono text-gray-900">
+              E[X]:
+              <span id="hipergeometrica-result-ex" class="font-bold">---</span>
+            </p>
+            <p class="text-sm font-mono text-gray-900">
+              Var(X):
+              <span id="hipergeometrica-result-varx" class="font-bold"
+                >---</span
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="infoModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h3 id="modalTitle" class="text-2xl font-bold text-blue-700 mb-3"></h3>
+        <p id="modalText" class="text-gray-700 mb-4"></p>
+        <div id="modalFormula" class="text-center font-mono"></div>
+        <div id="modalEX" class="text-center font-mono mt-3"></div>
+        <div id="modalVarX" class="text-center font-mono mt-1"></div>
+      </div>
+    </div>
+
+    <script>
+      // Funciones de Modal (se mantienen)
+      function openModal(title, text, formulaP, formulaEX, formulaVarX) {
+        document.getElementById("modalTitle").innerHTML = title;
+        document.getElementById("modalText").innerHTML = text;
+        document.getElementById("modalFormula").innerHTML = formulaP
+          ? `Función de Probabilidad P(X=x): $$${formulaP}$$`
+          : "";
+        document.getElementById("modalEX").innerHTML = formulaEX
+          ? `Esperanza E[X]: ${formulaEX}`
+          : "";
+        document.getElementById("modalVarX").innerHTML = formulaVarX
+          ? `Varianza Var(X): ${formulaVarX}`
+          : "";
+        document.getElementById("infoModal").style.display = "block";
+
+        if (window.MathJax) {
+          MathJax.Hub.Queue([
+            "Typeset",
+            MathJax.Hub,
+            "modalFormula",
+            "modalEX",
+            "modalVarX",
+          ]);
+        }
+      }
+
+      document.getElementById("closeModalBtn").onclick = function () {
+        document.getElementById("infoModal").style.display = "none";
+      };
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("infoModal")) {
+          document.getElementById("infoModal").style.display = "none";
+        }
+      };
+    </script>
+    <script src="./index.js" async></script>
+
+    <script src="../js/distribucionesD.js"></script>
+  </body>
+</html>

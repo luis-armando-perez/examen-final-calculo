@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+        // Configuración de MathJax
+        window.MathJax = {
+            tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+
+    <title>Calculadora de Esperanza Matemática</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* Estilos para las animaciones del modal */
+      .modal-enter {
+        animation: modal-enter 0.3s ease-out forwards;
+      }
+      .modal-exit {
+        animation: modal-exit 0.3s ease-in forwards;
+      }
+      @keyframes modal-enter {
+        from { transform: scale(0.95); opacity: 0; }
+        to { transform: scale(1); opacity: 1; }
+      }
+      @keyframes modal-exit {
+        from { transform: scale(1); opacity: 1; }
+        to { transform: scale(0.95); opacity: 0; }
+      }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <nav class="bg-white shadow-md fixed w-full z-20 top-0 left-0">
+        <div class="max-w-4xl mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <div class="text-xl font-bold text-blue-600">text</div>
+                
+                <button
+                    id="menu-toggle"
+                    class="md:hidden text-gray-700 hover:text-blue-600 focus:outline-none"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        class="h-6 w-6"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                    >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+                
+                <ul
+                    id="menu"
+                    class="hidden md:flex md:space-x-6 absolute md:static bg-white w-full left-0 top-14 md:top-auto shadow-md md:shadow-none flex-col md:flex-row md:items-center"
+                >
+                    <li class="border-b md:border-none">
+                        <a href="index.html" class="block px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors duration-200">Conjuntos</a>
+                    </li>
+                    <li class="border-b md:border-none">
+                        <a href="esperanza.html" class="block px-4 py-2 text-blue-600 font-semibold border-b-2 border-blue-600">Esperanza Matemática</a>
+                    </li>
+                    <li class="border-b md:border-none">
+                        <a href="permutaciones.html" class="block px-4 py-2 text-gray-700 hover:text-blue-600 transition-colors duration-200">Permutaciones</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container pt-20 mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800 mb-4">Calculadora de Esperanza Matemática ($\mathbf{E[X]}$)</h1>
+            <p class="text-lg text-gray-600">Calcula el valor esperado para variables discretas y continuas</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            
+            <div id="card-discreta" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Variable Discreta</h2>
+                        <p class="text-sm text-gray-600 font-mono bg-blue-50 px-3 py-1 rounded">$$E[X] = \sum x_i \cdot P(x_i)$$</p>
+                    </div>
+                    <button data-info-key="discreta" class="btn-info text-blue-600 hover:text-blue-800 transition-colors duration-200 text-xl">
+                        ℹ️
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad de pares (x, P(x))</label>
+                        <input id="cantidadDiscreta" type="number" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Ej: 3">
+                    </div>
+                    <button id="generarDiscreta" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Generar Campos
+                    </button>
+
+                    <div id="inputsDiscreta" class="space-y-2">
+                        </div>
+
+                    <button id="calcularDiscreta" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 transform hover:scale-105 hidden">
+                        Calcular E[X]
+                    </button>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600 mb-1">Resultado de $\mathbf{E[X]}$:</p>
+                        <p id="resultadoDiscreta" class="text-2xl font-bold text-gray-800">---</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="card-continua" class="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-2">Variable Continua (Tramos)</h2>
+                        <p class="text-sm text-gray-600 font-mono bg-green-50 px-3 py-1 rounded">$$E[X] = \sum_i \int_{a_i}^{b_i} x f_i(x) dx$$</p>
+                    </div>
+                    <button data-info-key="continua" class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl">
+                        ℹ️
+                    </button>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad de Tramos/Funciones $f(x)$</label>
+                        <input id="cantidadContinua" type="number" min="1" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500" placeholder="Ej: 2">
+                    </div>
+                    <button id="generarContinua" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+                        Generar Campos
+                    </button>
+
+                    <div id="inputsContinua" class="space-y-4">
+                        </div>
+
+                    <button id="calcularContinua" class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 transform hover:scale-105 hidden">
+                        Calcular E[X] Total
+                    </button>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <p class="text-sm text-gray-600 mb-1">Resultado de $\mathbf{E[X]}$ (Aprox. Numérica):</p>
+                        <p id="resultadoContinua" class="text-2xl font-bold text-gray-800">---</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div
+        id="infoModal"
+        class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 transition-opacity duration-300"
+    >
+        <div
+            id="modal-content"
+            class="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 modal-enter"
+        >
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="modal-title" class="text-xl font-bold text-gray-800"></h2>
+                    <button
+                        onclick="closeModal()"
+                        class="text-gray-400 hover:text-gray-600 text-2xl font-bold"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div class="mb-6">
+                    <p id="modal-content-text" class="text-gray-600 leading-relaxed">
+                        </p>
+                    <div id="modal-content-formula" class="mt-4 text-center text-blue-700 font-mono text-lg">
+                        </div>
+                </div>
+                <div class="flex justify-end">
+                    <button
+                        onclick="closeModal()"
+                        class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
+                    >
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Funciones de navegación y modal (reutilizadas de tu ejemplo)
+
+        document.getElementById("menu-toggle").addEventListener("click", () => {
+            document.getElementById("menu").classList.toggle("hidden");
+        });
+
+        const infoModal = document.getElementById("infoModal");
+        const modalTitle = document.getElementById("modal-title");
+        const modalText = document.getElementById("modal-content-text");
+        const modalFormula = document.getElementById("modal-content-formula");
+        const modalContent = document.getElementById("modal-content");
+
+        window.openModal = function(title, text, formula) {
+            modalTitle.textContent = title;
+            modalText.innerHTML = text;
+            modalFormula.textContent = formula; 
+
+            infoModal.classList.remove('hidden');
+            infoModal.classList.add('flex');
+            modalContent.classList.add('modal-enter');
+            
+            if (window.MathJax) {
+                MathJax.typesetPromise([modalFormula]);
+            }
+        }
+
+        window.closeModal = function() {
+            modalContent.classList.remove('modal-enter');
+            modalContent.classList.add('modal-exit');
+            
+            setTimeout(() => {
+                infoModal.classList.add('hidden');
+                infoModal.classList.remove('flex');
+                modalContent.classList.remove('modal-exit');
+            }, 300);
+        }
+
+        infoModal.addEventListener('click', (e) => {
+            if (e.target === infoModal) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && infoModal.classList.contains('flex')) {
+                closeModal();
+            }
+        });
+    </script>
+    <script src="../js/esperanza.js"></script>
+</body>
+</html>
