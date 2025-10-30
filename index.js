@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
           class="hidden md:flex md:space-x-6 flex-col md:flex-row md:items-center absolute md:static left-0 top-14 w-full md:w-auto bg-white md:bg-transparent shadow-md md:shadow-none z-10 transition-all duration-300 md:rounded-none rounded-b-lg">
           
           <li>
-            <a href="chebychev.html"
+            <a href="index.html"
               class="block px-4 py-2 text-gray-700 hover:text-blue-600 font-medium">Chebyshev</a>
           </li>
 
