@@ -61,6 +61,36 @@ document.addEventListener("DOMContentLoaded", () => {
             <a href="markov.html"
               class="block px-4 py-2 text-gray-700 hover:text-blue-600 font-medium">Markov</a>
           </li>
+
+          <li class="relative">
+            <button id="continuas-btn"
+              class="block w-full text-left px-4 py-2 text-gray-700 hover:text-blue-600 font-medium flex items-center">
+              <a href="continuas.html">Continuas</a>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1"
+                fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+
+            <!-- Lista desplegable -->
+            <ul id="sub-menu-dos"
+              class="hidden absolute left-0 mt-1 bg-white shadow-lg rounded-lg py-2 w-56 transition-all duration-200">
+              <li><a href="#card-uniforme"
+                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Uniforme</a></li>
+              <li><a href="#card-normal"
+                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Normal</a></li>
+              <li><a href="#card-exponencial"
+                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Exponencial</a></li>
+              <li><a href="#card-lognormal"
+                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Log-normal</a></li>
+              <li><a href="#card-gamma"
+                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Gamma</a></li>
+              <li><a href="#card-beta"
+                class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Beta</a></li>
+             
+            </ul>
+          </li>
         </ul>
       </div>
     </nav>
@@ -92,5 +122,35 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!e.target.closest("#distribuciones-btn")) {
       subMenu.classList.add("hidden");
     }
+  });
+
+  const continuasBtn = document.getElementById("continuas-btn");
+  const subMenuDos = document.getElementById("sub-menu-dos");
+  continuasBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    subMenuDos.classList.toggle("hidden");
+  });
+
+  // 6️⃣ Cerrar submenú al hacer clic fuera
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#continuas-btn")) {
+      subMenuDos.classList.add("hidden");
+    }
+  });
+
+  document.querySelectorAll("#sub-menu a, #sub-menu-dos a").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute("href").substring(1);
+      const target = document.getElementById(targetId);
+      if (target) {
+        const offset = 100; // altura del menú
+        const y = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({
+          top: y,
+          behavior: "smooth",
+        });
+      }
+    });
   });
 });
