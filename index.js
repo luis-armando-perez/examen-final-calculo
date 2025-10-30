@@ -26,19 +26,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
           <!-- Submenú -->
           <li class="relative">
-            <button id="distribuciones-btn"
-              class="block w-full text-left px-4 py-2 text-gray-700 hover:text-blue-600 font-medium flex items-center">
-              <a href="./distribucionesD.html">Distribuciones</a>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+            <div class="flex items-center justify-between px-4 py-2 text-gray-700 font-medium">
+              <a href="./distribucionesD.html" class="hover:text-blue-600">
+                Distribuciones
+              </a>
+              <button id="distribuciones-btn" class="ml-2 text-gray-700 hover:text-blue-600 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
 
             <!-- Lista desplegable -->
             <ul id="sub-menu"
-              class="hidden absolute left-0 mt-1 bg-white shadow-lg rounded-lg py-2 w-56 transition-all duration-200">
+                class="hidden md:absolute left-0 mt-1 bg-white shadow-lg rounded-lg py-2 w-56 transition-all duration-200 md:z-50 z-0">
               <li><a href="#card-bernoulli"
                 class="block px-4 py-2 text-gray-700 hover:bg-blue-50 hover:text-blue-600">Bernoulli</a></li>
               <li><a href="#card-binomial"
@@ -62,15 +65,19 @@ document.addEventListener("DOMContentLoaded", () => {
           </li>
 
           <li class="relative">
-            <button id="continuas-btn"
-              class="block w-full text-left px-4 py-2 text-gray-700 hover:text-blue-600 font-medium flex items-center">
-              <a href="continuas.html">Continuas</a>
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1"
-                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+
+            <div class="flex items-center justify-between px-4 py-2 text-gray-700 font-medium">
+              <a href="continuas.html" class="hover:text-blue-600">
+                Continuas
+              </a>
+              <button id="continuas-btn" class="ml-2 text-gray-700 hover:text-blue-600 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
+                  fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+            </div>
 
             <!-- Lista desplegable -->
             <ul id="sub-menu-dos"
@@ -157,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const targetId = link.getAttribute("href").substring(1);
       const target = document.getElementById(targetId);
       if (target) {
-        const offset = 100; 
+        const offset = 100;
         const y = target.getBoundingClientRect().top + window.scrollY - offset;
         window.scrollTo({ top: y, behavior: "smooth" });
 
@@ -178,8 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
           "transition-all",
           "duration-500"
         );
-
-
       }
     });
   });
