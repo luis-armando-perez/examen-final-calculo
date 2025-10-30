@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1️⃣ Plantilla del menú
   const menu = `
     <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <div class="flex justify-between items-center px-6 py-3">
@@ -97,10 +96,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   `;
 
-  // 2️⃣ Insertamos el menú en el body (o donde quieras)
   document.body.insertAdjacentHTML("afterbegin", menu);
 
-  // 3️⃣ Lógica del botón hamburguesa
   const menuToggle = document.getElementById("menu-toggle");
   const menuLinks = document.getElementById("menuLinks");
 
@@ -108,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
     menuLinks.classList.toggle("hidden");
   });
 
-  // 4️⃣ Lógica del submenú “Distribuciones”
   const distribucionesBtn = document.getElementById("distribuciones-btn");
   const subMenu = document.getElementById("sub-menu");
 
@@ -117,7 +113,6 @@ document.addEventListener("DOMContentLoaded", () => {
     subMenu.classList.toggle("hidden");
   });
 
-  // 5️⃣ Cerrar submenú al hacer clic fuera
   document.addEventListener("click", (e) => {
     if (!e.target.closest("#distribuciones-btn")) {
       subMenu.classList.add("hidden");
@@ -131,7 +126,6 @@ document.addEventListener("DOMContentLoaded", () => {
     subMenuDos.classList.toggle("hidden");
   });
 
-  // 6️⃣ Cerrar submenú al hacer clic fuera
   document.addEventListener("click", (e) => {
     if (!e.target.closest("#continuas-btn")) {
       subMenuDos.classList.add("hidden");
@@ -150,6 +144,42 @@ document.addEventListener("DOMContentLoaded", () => {
           top: y,
           behavior: "smooth",
         });
+      }
+    });
+  });
+
+  //envolver tarjetas y resaltar
+  const cards = document.querySelectorAll(".card");
+
+  document.querySelectorAll("#sub-menu a, #sub-menu-dos a").forEach((link) => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute("href").substring(1);
+      const target = document.getElementById(targetId);
+      if (target) {
+        const offset = 100; 
+        const y = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+
+        cards.forEach((c) =>
+          c.classList.remove(
+            "ring-4",
+            "ring-red-400",
+            "shadow-2xl",
+            "scale-[1.02]"
+          )
+        );
+
+        target.classList.add(
+          "ring-4",
+          "ring-red-400",
+          "shadow-2xl",
+          "scale-[1.02]",
+          "transition-all",
+          "duration-500"
+        );
+
+
       }
     });
   });
