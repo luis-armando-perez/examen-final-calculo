@@ -1,3 +1,4 @@
+
 // Archivo: distribuciones.js
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -1,152 +1,253 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calculadora de Teorema de Markov</title>
     <script src="https://cdn.tailwindcss.com"></script>
-        <script src="./index.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./index.js" defer></script>
 
     <style>
-        .input-dim { width: 80px; text-align: center; }
-        .matrix-input { font-size: 0.85rem; }
-        /* Estilos para el Modal */
-        .modal {
-            display: none; /* Oculto por defecto */
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4); /* Fondo semi-transparente */
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto; /* 15% del top y centrado */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Podría ser más grande o más pequeño */
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .close-btn {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close-btn:hover,
-        .close-btn:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
-        }
+      .input-dim {
+        width: 80px;
+        text-align: center;
+      }
+      .matrix-input {
+        font-size: 0.85rem;
+      }
+      /* Estilos para el Modal */
+      .modal {
+        display: none; /* Oculto por defecto */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente */
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto; /* 15% del top y centrado */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%; /* Podría ser más grande o más pequeño */
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      .close-btn:hover,
+      .close-btn:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+      }
     </style>
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-</head>
-<body class="bg-gray-100 p-8">
-    <div  id ="navBar" class="bg-white shadow-md fixed w-full z-20 top-0 left-0"></div>
-
+    <script
+      type="text/javascript"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+    ></script>
+  </head>
+  <body class="bg-gray-100 p-8">
+    <div
+      id="navBar"
+      class="bg-white shadow-md fixed w-full z-20 top-0 left-0"
+    ></div>
 
     <div class="max-w-4xl mt-16 mx-auto bg-white p-6 rounded-xl shadow-2xl">
-        
-        <div class="flex items-center space-x-3 mb-6 border-b pb-2">
-            <h1 class="text-3xl font-bold text-indigo-700">
-                Teorema de Markov: Vector de Estados Vn
-            </h1>
-            <button id="btnInfoMarkov" data-info-key="markov" class="btn-info text-blue-600 hover:text-blue-800 transition-colors duration-200 text-xl">
-                ℹ️
-            </button>
+      <div class="flex items-center space-x-3 mb-6 border-b pb-2">
+        <h1 class="text-3xl font-bold text-indigo-700">
+          Teorema de Markov: Vector de Estados Vn
+        </h1>
+        <button
+          id="btnInfoMarkov"
+          data-info-key="markov"
+          class="btn-info text-blue-600 hover:text-blue-800 transition-colors duration-200 text-xl"
+        >
+          ℹ️
+        </button>
+      </div>
+
+      <div class="bg-indigo-50 p-4 rounded-lg mb-6 shadow-inner">
+        <h2 class="text-xl font-semibold text-indigo-800 mb-4">
+          1. Definir Dimensiones
+        </h2>
+        <div class="flex items-center space-x-4">
+          <label class="text-gray-700 font-medium">
+            Número de Estados (Dimensión N):
+          </label>
+          <input
+            id="dimN"
+            type="number"
+            min="2"
+            max="5"
+            value="3"
+            class="input-dim px-2 py-1 border border-indigo-400 rounded-lg focus:ring-2 focus:ring-indigo-500"
+          />
+          <button
+            id="generarMatricesBtn"
+            class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150"
+          >
+            Generar Matrices
+          </button>
+        </div>
+      </div>
+
+      <div id="matricesContainer" class="hidden space-y-8">
+        <h2 class="text-xl font-semibold text-indigo-800 border-b pb-2">
+          2. Ingresar Datos (V0 y P)
+        </h2>
+
+        <div>
+          <h3 class="font-bold text-lg mb-2 text-gray-700">
+            Vector Inicial V0
+          </h3>
+          <div
+            id="v0Container"
+            class="flex flex-wrap gap-4 p-3 border rounded-lg bg-gray-50"
+          ></div>
         </div>
 
-        <div class="bg-indigo-50 p-4 rounded-lg mb-6 shadow-inner">
-            <h2 class="text-xl font-semibold text-indigo-800 mb-4">1. Definir Dimensiones</h2>
-            <div class="flex items-center space-x-4">
-                <label class="text-gray-700 font-medium">
-                    Número de Estados (Dimensión N):
-                </label>
-                <input id="dimN" type="number" min="2" max="5" value="3" class="input-dim px-2 py-1 border border-indigo-400 rounded-lg focus:ring-2 focus:ring-indigo-500">
-                <button id="generarMatricesBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150">
-                    Generar Matrices
-                </button>
-            </div>
+        <div>
+          <h3 class="font-bold text-lg mb-2 text-gray-700">
+            Matriz de Transición P
+          </h3>
+          <div id="pContainer" class="p-3 border rounded-lg bg-gray-50"></div>
         </div>
+      </div>
 
-        <div id="matricesContainer" class="hidden space-y-8">
-            <h2 class="text-xl font-semibold text-indigo-800 border-b pb-2">2. Ingresar Datos (V0 y P)</h2>
-            
-            <div>
-                <h3 class="font-bold text-lg mb-2 text-gray-700">Vector Inicial V0 </h3>
-                <div id="v0Container" class="flex flex-wrap gap-4 p-3 border rounded-lg bg-gray-50">
-                    </div>
-            </div>
-
-            <div>
-                <h3 class="font-bold text-lg mb-2 text-gray-700">Matriz de Transición P </h3>
-                <div id="pContainer" class="p-3 border rounded-lg bg-gray-50">
-                    </div>
-            </div>
+      <div
+        id="calculoContainer"
+        class="hidden mt-8 bg-green-50 p-4 rounded-lg shadow-inner"
+      >
+        <h2 class="text-xl font-semibold text-green-800 mb-4">
+          3. Calcular Estado Futuro Vn
+        </h2>
+        <div class="flex items-center space-x-4">
+          <label class="text-gray-700 font-medium">
+            Número de Pasos (n):
+          </label>
+          <input
+            id="numPasos"
+            type="number"
+            min="1"
+            value="1"
+            class="input-dim px-2 py-1 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500"
+          />
+          <button
+            id="calcularMarkovBtn"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition duration-150"
+          >
+            Calcular Vn
+          </button>
+          <button
+            id="mostrar-grafico"
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition duration-150"
+          >
+            Mostrar Gráfico
+          </button>
         </div>
+      </div>
 
-        <div id="calculoContainer" class="hidden mt-8 bg-green-50 p-4 rounded-lg shadow-inner">
-            <h2 class="text-xl font-semibold text-green-800 mb-4">3. Calcular Estado Futuro Vn</h2>
-            <div class="flex items-center space-x-4">
-                <label class="text-gray-700 font-medium">
-                    Número de Pasos (n):
-                </label>
-                <input id="numPasos" type="number" min="1" value="1" class="input-dim px-2 py-1 border border-green-400 rounded-lg focus:ring-2 focus:ring-green-500">
-                <button id="calcularMarkovBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition duration-150">
-                    Calcular Vn
-                </button>
-            </div>
+      <div class="mt-8 pt-4 border-t-2 border-indigo-200">
+        <h2 class="text-xl font-semibold text-gray-700 mb-4">Resultado Vn</h2>
+        <div
+          id="resultadoMarkov"
+          class="text-2xl font-mono p-4 bg-gray-100 border border-gray-300 rounded-lg min-h-[50px]"
+        >
+          ---
         </div>
-
-        <div class="mt-8 pt-4 border-t-2 border-indigo-200">
-            <h2 class="text-xl font-semibold text-gray-700 mb-4">Resultado Vn</h2>
-            <div id="resultadoMarkov" class="text-2xl font-mono p-4 bg-gray-100 border border-gray-300 rounded-lg min-h-[50px]">
-                ---
-            </div>
-            <p id="errorMsg" class="text-red-600 font-bold mt-2 hidden"></p>
-        </div>
-
+        <p id="errorMsg" class="text-red-600 font-bold mt-2 hidden"></p>
+      </div>
     </div>
 
     <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn" id="closeModalBtn">&times;</span>
-            <h3 id="modalTitle" class="text-2xl font-bold text-indigo-700 mb-3"></h3>
-            <p id="modalText" class="text-gray-700 mb-4"></p>
-            <div id="modalFormula" class="text-center"></div>
-        </div>
+      <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h3
+          id="modalTitle"
+          class="text-2xl font-bold text-indigo-700 mb-3"
+        ></h3>
+        <p id="modalText" class="text-gray-700 mb-4"></p>
+        <div id="modalFormula" class="text-center"></div>
+      </div>
     </div>
-    
-    <script>
-        // Función global para abrir el modal (llamada por el JS)
-        function openModal(title, text, formula) {
-            document.getElementById('modalTitle').innerHTML = title;
-            document.getElementById('modalText').innerHTML = text;
-            document.getElementById('modalFormula').innerHTML = formula;
-            document.getElementById('infoModal').style.display = "block";
-            // Re-renderizar fórmulas MathJax si existen
-            if (window.MathJax) {
-                MathJax.Hub.Queue(["Typeset", MathJax.Hub, "modalFormula"]);
-            }
-        }
 
-        // Lógica para cerrar el modal
-        document.getElementById('closeModalBtn').onclick = function() {
-            document.getElementById('infoModal').style.display = "none";
+    <div
+      id="modalGrafico"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-2xl relative animate-fadeIn"
+      >
+        <!-- Botón cerrar -->
+        <button
+          id="cerrar-modal"
+          class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        >
+          &times;
+        </button>
+
+        <h2 class="text-center text-2xl font-bold text-gray-700 mb-4">
+          Gráfico - Teorema de Chebyshev
+        </h2>
+
+        <!-- Contenedor del gráfico -->
+        <canvas id="markov-chart" height="220"></canvas>
+      </div>
+    </div>
+
+    <script>
+      // Función global para abrir el modal (llamada por el JS)
+      function openModal(title, text, formula) {
+        document.getElementById("modalTitle").innerHTML = title;
+        document.getElementById("modalText").innerHTML = text;
+        document.getElementById("modalFormula").innerHTML = formula;
+        document.getElementById("infoModal").style.display = "block";
+        // Re-renderizar fórmulas MathJax si existen
+        if (window.MathJax) {
+          MathJax.Hub.Queue(["Typeset", MathJax.Hub, "modalFormula"]);
         }
-        window.onclick = function(event) {
-            if (event.target == document.getElementById('infoModal')) {
-                document.getElementById('infoModal').style.display = "none";
-            }
+      }
+
+      // Lógica para cerrar el modal
+      document.getElementById("closeModalBtn").onclick = function () {
+        document.getElementById("infoModal").style.display = "none";
+      };
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("infoModal")) {
+          document.getElementById("infoModal").style.display = "none";
         }
+      };
+    </script>
+    <script>
+      const btnMostrar = document.getElementById("mostrar-grafico");
+      const modal = document.getElementById("modalGrafico");
+      const btnCerrar = document.getElementById("cerrar-modal");
+
+      btnMostrar.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+      });
+
+      btnCerrar.addEventListener("click", () => {
+        modal.classList.add("hidden");
+      });
+
+      // Cerrar si se hace clic fuera del cuadro
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.add("hidden");
+      });
     </script>
 
     <script src="./js/markov.js"></script>
-</body>
+  </body>
 </html>
