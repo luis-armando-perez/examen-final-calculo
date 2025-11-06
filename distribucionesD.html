@@ -84,6 +84,23 @@
             </button>
           </div>
 
+          <!-- SELECT DE EJEMPLOS - NUEVO -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Cargar ejemplo:</label
+            >
+            <select
+              id="bernoulli-ejemplos-select"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" selected disabled>Selecciona un ejemplo</option>
+
+              <option value="bernoulli-1">Lanzamiento de moneda</option>
+              <option value="bernoulli-2">Encuesta simple</option>
+              <option value="bernoulli-3">Control de calidad</option>
+            </select>
+          </div>
+
           <div class="space-y-3 mb-4">
             <div class="input-group">
               <label class="block text-sm font-medium text-gray-700"
@@ -235,6 +252,29 @@
             >
               ℹ️
             </button>
+          </div>
+
+          <!-- SELECT DE EJEMPLOS - NUEVO -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Cargar ejemplo:</label
+            >
+            <select
+              id="binomial-ejemplos-select"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" selected disabled>Selecciona un ejemplo</option>
+
+              <option value="binomial-1">
+                Probabilidad de 6 caras en 10 monedas
+              </option>
+              <option value="binomial-2">
+                25 personas de 30 vieron un evento
+              </option>
+              <option value="binomial-3">
+                Probabilidad de 18 participantes
+              </option>
+            </select>
           </div>
 
           <div class="space-y-3 mb-4">
@@ -402,6 +442,30 @@
             </button>
           </div>
 
+          <!-- SELECT DE EJEMPLOS - NUEVO -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Cargar ejemplo:</label
+            >
+            <select
+              id="geometrica-ejemplos-select"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" selected disabled>Selecciona un ejemplo</option>
+
+              <option value="geometrica-1">
+                Proba de que el cuarto cliente realice una compra
+              </option>
+              <option value="geometrica-2">
+                Proba de que el primer defecto ocurra en el producto nu 50°
+              </option>
+              <option value="geometrica-3">
+                Proba de que un vendedor realice su primera venta en el octavo
+                intento
+              </option>
+            </select>
+          </div>
+
           <div class="space-y-3 mb-4">
             <div class="input-group">
               <label class="block text-sm font-medium text-gray-700">
@@ -553,6 +617,31 @@
             >
               ℹ️
             </button>
+          </div>
+
+          <!-- SELECT DE EJEMPLOS - NUEVO -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Cargar ejemplo:</label
+            >
+            <select
+              id="binomialNegativa-ejemplos-select"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" selected disabled>Selecciona un ejemplo</option>
+
+              <option value="binomial-negativa-1">
+                Proba de que se requieran 8 Lanzamientos para obtener 5 caras
+              </option>
+              <option value="binomial-negativa-2">
+                Probabilidad de que el segundo artículo defectuoso (éxito)
+                aparezca en el 15º artículo inspeccionado.
+              </option>
+              <option value="binomial-negativa-3">
+                Proba de que un vendedor realice su primera venta en el intento
+                12 de una llamada
+              </option>
+            </select>
           </div>
 
           <div class="space-y-3 mb-4">
@@ -725,6 +814,32 @@
             >
               ℹ️
             </button>
+          </div>
+
+          <!-- SELECT DE EJEMPLOS - NUEVO -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Cargar ejemplo:</label
+            >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+
+            <select
+              id="binomialFracasos-ejemplos-select"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="binomial-negativa-fracasos-1">
+                Prob. de 3 fracasos antes del 5º éxito (caras) en lanzamientos
+                de moneda.
+              </option>
+              <option value="binomial-negativa-fracasos-2">
+                Prob. de 13 artículos buenos (fracasos) antes del 2º artículo
+                defectuoso (éxito).
+              </option>
+              <option value="binomial-negativa-fracasos-3">
+                Prob. de 9 intentos fallidos (fracasos) antes de la 3ª venta
+                (éxito) de un vendedor.
+              </option>
+            </select>
           </div>
 
           <div class="space-y-3 mb-4">
@@ -904,6 +1019,32 @@
             </button>
           </div>
 
+          <!-- SELECT DE EJEMPLOS - NUEVO -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Cargar ejemplo:</label
+            >
+            <select
+              id="poisson-ejemplos-select"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" selected disabled>Selecciona un ejemplo</option>
+
+              <option value="poisson-1">
+                Prob. de que lleguen 5 autos a un peaje en un minuto, si llegan
+                en promedio 3.5 por minuto.
+              </option>
+              <option value="poisson-2">
+                Prob. de que no haya fallas (0 eventos) en una hora de servidor,
+                si la tasa media es de 1.2 fallas por hora.
+              </option>
+              <option value="poisson-3">
+                Prob. de recibir 10 llamadas en una hora, si el centro de
+                llamadas recibe en promedio 6 llamadas por hora.
+              </option>
+            </select>
+          </div>
+
           <div class="space-y-3 mb-4">
             <div class="input-group">
               <label class="block text-sm font-medium text-gray-700"
@@ -1052,6 +1193,32 @@
               ℹ️
             </button>
           </div>
+
+          <!-- SELECT DE EJEMPLOS - NUEVO -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2"
+              >Cargar ejemplo:</label
+            >
+            <select
+              id="hipergeometrica-ejemplos-select"
+              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+            >
+              <option value="" selected disabled>Selecciona un ejemplo</option>
+              <option value="hipergeometrica-1">
+                Prob. de seleccionar 2 fusibles defectuosos (éxitos) en una
+                muestra de 5, de una caja de 50 con 10 defectuosos.
+              </option>
+              <option value="hipergeometrica-2">
+                Prob. de elegir 3 estudiantes de ingeniería (éxitos) en una
+                muestra de 6, de un grupo de 20 con 8 ingenieros.
+              </option>
+              <option value="hipergeometrica-3">
+                Prob. de encontrar 1 carta de corazones (éxito) en una mano de
+                10 cartas, de una baraja de 40 cartas (4 corazones).
+              </option>
+            </select>
+          </div>
+
           <div class="space-y-3 mb-4">
             <div class="grid grid-cols-3 gap-3">
               <div class="input-group">

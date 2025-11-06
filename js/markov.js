@@ -14,7 +14,46 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let N = 2; // Dimensión por defecto
 
-  // Función para generar la estructura de inputs de matrices
+  // Dentro de tu DOMContentLoaded en markov.js
+const selectEjemplo = document.getElementById("markov-ejemplos-select");
+
+// Fetch de ejemplos
+fetch("data/ejemplos.json")
+  .then(res => res.json())
+  .then(ejemplos => {
+    selectEjemplo.addEventListener("change", () => {
+      const key = selectEjemplo.value;
+      if (key && ejemplos[key]) {
+        const ej = ejemplos[key];
+        const N = ej.estados.length;
+
+        // Generar inputs de V0 y P según N
+        generarInputs(N);
+
+        // Llenar V0 con distribución uniforme (por defecto) o 0s
+        ej.estados.forEach((_, j) => {
+          const v0Input = document.getElementById(`v0-${j}`);
+          if (v0Input) v0Input.value = (1 / N).toFixed(2); // ejemplo de inicialización uniforme
+        });
+
+        // Llenar la matriz de transición
+        for (let i = 0; i < N; i++) {
+          for (let j = 0; j < N; j++) {
+            const pInput = document.getElementById(`p-${i}-${j}`);
+            if (pInput) pInput.value = ej.probabilidades_transicion[i][j];
+          }
+        }
+
+        console.log(`Ejemplo seleccionado: ${ej.desc}`);
+      } else {
+        // Si no selecciona nada, limpiar todo
+        generarInputs(2); // default 2x2
+      }
+    });
+  })
+  .catch(err => console.error("Error cargando ejemplos de Markov:", err));
+
+
   function generarInputs(dim) {
     N = dim;
     v0Container.innerHTML = "";

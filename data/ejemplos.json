@@ -1,0 +1,176 @@
+{
+  "bernoulli-1": {
+    "p": 0.5,
+    "x": 1,
+    "desc": "Lanzamiento de moneda - probabilidad de cara"
+  },
+  "bernoulli-2": {
+    "p": 0.3,
+    "x": 1,
+    "desc": "Encuesta - probabilidad de respuesta 'sí'"
+  },
+  "bernoulli-3": {
+    "p": 0.05,
+    "x": 1,
+    "desc": "Control de calidad - probabilidad de defectuoso"
+  },
+  "binomial-1": {
+    "n": 10,
+    "p": 0.5,
+    "x": 6,
+    "desc": "Probabilidad de obtener 6 caras en 10 lanzamientos de una moneda imparcial."
+  },
+  "binomial-2": {
+    "n": 30,
+    "p": 0.8,
+    "x": 25,
+    "desc": "Probabilidad de que exactamente 25 personas de 30 encuestadas hayan visto un evento reciente (tasa de éxito del 80%)."
+  },
+  "binomial-3": {
+    "n": 20,
+    "p": 0.75,
+    "x": 18,
+    "desc": "Probabilidad de que 18 pacientes de 20 reaccionen positivamente a un tratamiento médico (probabilidad de éxito individual del 75%)."
+  },
+  "geometrica-1": {
+    "p": 0.2,
+    "x": 4,
+    "desc": "Probabilidad de que el primer cliente que realice una compra sea el cuarto cliente en entrar a la tienda (tasa de compra del 20%)."
+  },
+  "geometrica-2": {
+    "p": 0.01,
+    "x": 50,
+    "desc": "Probabilidad de que el primer defecto en un proceso de producción ocurra en el 50º artículo inspeccionado (tasa de defecto del 1%)."
+  },
+  "geometrica-3": {
+    "p": 0.15,
+    "x": 8,
+    "desc": "Probabilidad de que un vendedor realice su primera venta al octavo intento de llamada (tasa de éxito del 15%)."
+  },
+  "binomial-negativa-1": {
+    "p": 0.5,
+    "r": 5,
+    "x": 8,
+    "desc": "Probabilidad de que se requieran exactamente 8 lanzamientos de una moneda para obtener 5 caras (éxitos)."
+  },
+  "binomial-negativa-2": {
+    "p": 0.05,
+    "r": 2,
+    "x": 15,
+    "desc": "Probabilidad de que el segundo artículo defectuoso (éxito) aparezca en el 15º artículo inspeccionado, dada una tasa de defecto del 5%."
+  },
+  "binomial-negativa-3": {
+    "p": 0.15,
+    "r": 3,
+    "x": 12,
+    "desc": "Probabilidad de que un vendedor consiga su tercera venta (éxito) exactamente en su 12º intento de llamada (tasa de éxito del 15%)."
+  },
+  "binomial-negativa-fracasos-1": {
+    "p": 0.5,
+    "r": 5,
+    "y": 3,
+    "desc": "Prob. de 3 fracasos antes del 5º éxito (caras) en lanzamientos de moneda."
+  },
+  "binomial-negativa-fracasos-2": {
+    "p": 0.05,
+    "r": 2,
+    "y": 13,
+    "desc": "Prob. de 13 artículos buenos (fracasos) antes del 2º artículo defectuoso (éxito)."
+  },
+  "binomial-negativa-fracasos-3": {
+    "p": 0.15,
+    "r": 3,
+    "y": 9,
+    "desc": "Prob. de 9 intentos fallidos (fracasos) antes de la 3ª venta (éxito) de un vendedor."
+  },
+  "poisson-1": {
+    "lambda": 3.5,
+    "x": 5,
+    "desc": "Prob. de que lleguen 5 autos a un peaje en un minuto, si llegan en promedio 3.5 por minuto."
+  },
+  "poisson-2": {
+    "lambda": 1.2,
+    "x": 0,
+    "desc": "Prob. de que no haya fallas (0 eventos) en una hora de servidor, si la tasa media es de 1.2 fallas por hora."
+  },
+  "poisson-3": {
+    "lambda": 6,
+    "x": 10,
+    "desc": "Prob. de recibir 10 llamadas en una hora, si el centro de llamadas recibe en promedio 6 llamadas por hora."
+  },
+  "hipergeometrica-1": {
+    "N": 50,
+    "K": 10,
+    "n": 5,
+    "x": 2,
+    "desc": "Prob. de seleccionar 2 fusibles defectuosos (éxitos) en una muestra de 5, de una caja de 50 con 10 defectuosos."
+  },
+  "hipergeometrica-2": {
+    "N": 20,
+    "K": 8,
+    "n": 6,
+    "x": 3,
+    "desc": "Prob. de elegir 3 estudiantes de ingeniería (éxitos) en una muestra de 6, de un grupo de 20 con 8 ingenieros."
+  },
+  "hipergeometrica-3": {
+    "N": 40,
+    "K": 4,
+    "n": 10,
+    "x": 1,
+    "desc": "Prob. de encontrar 1 carta de corazones (éxito) en una mano de 10 cartas, de una baraja de 40 cartas (4 corazones)."
+  },
+  "chebyshev-1": {
+    "mu": 100,
+    "sigma": 15,
+    "k": 2,
+    "desc": "Calcular la proporción de puntuaciones de un examen que caen entre 70 y 130 (dentro de 2 desviaciones estándar de la media 100)."
+  },
+  "chebyshev-2": {
+    "mu": 50000,
+    "sigma": 5000,
+    "k": 3,
+    "desc": "Determinar la proporción mínima de salarios que caen entre $35,000 y $65,000 (dentro de 3 desviaciones estándar de la media $50,000)."
+  },
+  "chebyshev-3": {
+    "mu": 25,
+    "sigma": 5,
+    "k": 4,
+    "desc": "Encontrar el límite inferior de la probabilidad de que un proceso dure entre 5 y 45 minutos (dentro de 4 desviaciones estándar de la media 25)."
+  },
+  "markov-1-clima": {
+    "estados": [
+      "Soleado",
+      "Nublado",
+      "Lluvioso"
+    ],
+    "probabilidades_transicion": [
+      [0.7, 0.2, 0.1],
+      [0.3, 0.4, 0.3],
+      [0.2, 0.3, 0.5]
+    ],
+    "desc": "Modelo del clima diario. Fila 1: Prob. de pasar de Soleado a (Soleado, Nublado, Lluvioso)."
+  },
+  "markov-2-marca": {
+    "estados": [
+      "Marca A",
+      "Marca B"
+    ],
+    "probabilidades_transicion": [
+      [0.9, 0.1],
+      [0.2, 0.8]
+    ],
+    "desc": "Modelo de lealtad de marca. Fila 1: Prob. de que un cliente de A se quede en A (0.9) o cambie a B (0.1) en el siguiente periodo."
+  },
+  "markov-3-maquina": {
+    "estados": [
+      "Operativa",
+      "Averiada"
+    ],
+    "probabilidades_transicion": [
+      [0.98, 0.02],
+      [0.4, 0.6]
+    ],
+    "desc": "Modelo de estado de una máquina. Fila 1: Prob. de que una máquina operativa siga operativa (0.98) o se averíe (0.02)."
+  }
+
+}

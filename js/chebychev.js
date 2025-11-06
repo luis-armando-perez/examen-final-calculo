@@ -15,8 +15,32 @@ document.addEventListener("DOMContentLoaded", () => {
         resultUpperId: 'chebychev-result-upper'
     };
 
-    let chartInstance = null; // para actualizar el gráfico sin duplicarlo
+    let chartInstance = null;
 
+    // ---- NUEVO: Fetch de ejemplos ----
+    const selectEjemplo = document.getElementById('chebychev-ejemplos-select');
+    fetch("data/ejemplos.json")
+        .then(res => res.json())
+        .then(ejemplos => {
+            selectEjemplo.addEventListener("change", () => {
+                const key = selectEjemplo.value;
+                if (key && ejemplos[key]) {
+                    const ej = ejemplos[key];
+                    document.getElementById(chebychevData.inputMuId).value = ej.mu;
+                    document.getElementById(chebychevData.inputSigmaId).value = ej.sigma;
+                    document.getElementById(chebychevData.inputKId).value = ej.k;
+                    console.log(`Ejemplo seleccionado: ${ej.desc}`);
+                } else {
+                    // Limpiar si no se selecciona nada
+                    document.getElementById(chebychevData.inputMuId).value = '';
+                    document.getElementById(chebychevData.inputSigmaId).value = '';
+                    document.getElementById(chebychevData.inputKId).value = '';
+                }
+            });
+        })
+        .catch(err => console.error("Error cargando ejemplos:", err));
+
+    // ---- Función de cálculo y gráfico (igual que tu código original) ----
     function calculateChebychev() {
         const mu = parseFloat(document.getElementById(chebychevData.inputMuId).value);
         const sigma = parseFloat(document.getElementById(chebychevData.inputSigmaId).value);
@@ -44,18 +68,14 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById(chebychevData.resultLowerId).textContent = lowerBound.toFixed(4);
         document.getElementById(chebychevData.resultUpperId).textContent = upperBound.toFixed(4);
 
-        // --- GRAFICAR DISTRIBUCIÓN (normal como referencia) ---
+        // Gráfico
         const xValues = [];
         const yValues = [];
-
-        // simulamos puntos de -4σ a +4σ
         for (let x = mu - 4 * sigma; x <= mu + 4 * sigma; x += sigma / 20) {
             const y = (1 / (sigma * Math.sqrt(2 * Math.PI))) * Math.exp(-0.5 * ((x - mu) / sigma) ** 2);
             xValues.push(x.toFixed(2));
             yValues.push(y);
         }
-
-        // crear dataset del área destacada entre los límites
         const highlight = xValues.map((x, i) =>
             (x >= lowerBound && x <= upperBound) ? yValues[i] : null
         );
@@ -97,13 +117,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     tooltip: { mode: 'index' }
                 },
                 scales: {
-                    x: {
-                        title: { display: true, text: 'Valor X' }
-                    },
-                    y: {
-                        title: { display: true, text: 'Densidad (f(x))' },
-                        ticks: { display: false }
-                    }
+                    x: { title: { display: true, text: 'Valor X' } },
+                    y: { title: { display: true, text: 'Densidad (f(x))' }, ticks: { display: false } }
                 }
             }
         });

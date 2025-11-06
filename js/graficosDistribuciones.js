@@ -21,6 +21,7 @@
     const resultEx = document.getElementById("bernoulli-result-ex");
     const resultVarx = document.getElementById("bernoulli-result-varx");
     const canvas = document.getElementById("bernoulliChart");
+    const selectEj = document.getElementById("bernoulli-ejemplos-select");
 
     // Si faltan elementos, salimos con mensaje (útil para debugging)
     if (
@@ -43,6 +44,28 @@
       );
       return;
     }
+
+    //preuba de fetch
+
+    fetch("data/ejemplos.json")
+      .then((res) => res.json())
+      .then((ejemplos) => {
+        // Cuando el usuario selecciona un ejemplo
+        selectEj.addEventListener("change", () => {
+          const key = selectEj.value;
+          if (key && ejemplos[key]) {
+            const ej = ejemplos[key];
+            inputP.value = ej.p;
+            inputX.value = ej.x;
+            // Opcional: mostrar descripción
+            console.log(`Ejemplo seleccionado: ${ej.desc}`);
+          } else {
+            inputP.value = "";
+            inputX.value = "";
+          }
+        });
+      })
+      .catch((err) => console.error("Error cargando ejemplos:", err));
 
     // Eventos modal info
     infoBtn.addEventListener("click", () => {
@@ -179,8 +202,31 @@
   const resultPx = document.getElementById("binomial-result-px");
   const resultEx = document.getElementById("binomial-result-ex");
   const resultVarX = document.getElementById("binomial-result-varx");
+  const selectEj = document.getElementById("binomial-ejemplos-select");
 
   let binomialChart = null;
+
+  fetch("data/ejemplos.json")
+    .then((res) => res.json())
+    .then((ejemplos) => {
+      // Cuando el usuario selecciona un ejemplo
+      selectEj.addEventListener("change", () => {
+        const key = selectEj.value;
+        if (key && ejemplos[key]) {
+          const ej = ejemplos[key];
+          inputN.value = ej.n;
+          inputP.value = ej.p;
+          inputX.value = ej.x;
+          // Opcional: mostrar descripción
+          console.log(`Ejemplo seleccionado: ${ej.desc}`);
+        } else {
+          inputN.value = "";
+          inputP.value = "";
+          inputX.value = "";
+        }
+      });
+    })
+    .catch((err) => console.error("Error cargando ejemplos:", err));
 
   // =====================
   // MODAL DE INFORMACIÓN
@@ -318,8 +364,27 @@
   const resultPx = document.getElementById("geometrica-result-px");
   const resultEx = document.getElementById("geometrica-result-ex");
   const resultVarX = document.getElementById("geometrica-result-varx");
+  const selectEj = document.getElementById("geometrica-ejemplos-select");
 
   let geometricaChart = null;
+
+  fetch("data/ejemplos.json")
+    .then((res) => res.json())
+    .then((ejemplos) => {
+      selectEj.addEventListener("change", () => {
+        const key = selectEj.value;
+        if (key && ejemplos[key]) {
+          const ej = ejemplos[key];
+          inputP.value = ej.p;
+          inputX.value = ej.x;
+          console.log(`Ejemplo seleccionado: ${ej.desc}`);
+        } else {
+          inputP.value = "";
+          inputX.value = "";
+        }
+      });
+    })
+    .catch((err) => console.error("Error cargando ejemplos:", err));
 
   // =====================
   // MODAL DE INFORMACIÓN
@@ -465,8 +530,30 @@
   const resultPx = document.getElementById("binomialNegativa-result-px");
   const resultEx = document.getElementById("binomialNegativa-result-ex");
   const resultVarX = document.getElementById("binomialNegativa-result-varx");
+  const selectEj = document.getElementById("binomialNegativa-ejemplos-select");
 
   let chartNegativa = null;
+
+  fetch("data/ejemplos.json")
+    .then((res) => res.json())
+    .then((ejemplos) => {
+      // Cuando el usuario selecciona un ejemplo
+      selectEj.addEventListener("change", () => {
+        const key = selectEj.value;
+        if (key && ejemplos[key]) {
+          const ej = ejemplos[key];
+          inputR.value = ej.r;
+          inputP.value = ej.p;
+          inputX.value = ej.x;
+          // Opcional: mostrar descripción
+          console.log(`Ejemplo seleccionado: ${ej.desc}`);
+        } else {
+          inputP.value = "";
+          inputX.value = "";
+        }
+      });
+    })
+    .catch((err) => console.error("Error cargando ejemplos:", err));
 
   // =====================
   // MODAL DE INFORMACIÓN
@@ -643,8 +730,29 @@
   const resultVarX = document.getElementById(
     "binomialNegativaFracasos-result-varx"
   );
+  const selectEj = document.getElementById("binomialFracasos-ejemplos-select");
 
   let chartNegativaFracasos = null;
+  fetch("data/ejemplos.json")
+    .then((res) => res.json())
+    .then((ejemplos) => {
+      // Cuando el usuario selecciona un ejemplo
+      selectEj.addEventListener("change", () => {
+        const key = selectEj.value;
+        if (key && ejemplos[key]) {
+          const ej = ejemplos[key];
+          inputR.value = ej.r;
+          inputP.value = ej.p;
+          inputX.value = ej.y;
+          // Opcional: mostrar descripción
+          console.log(`Ejemplo seleccionado: ${ej.desc}`);
+        } else {
+          inputP.value = "";
+          inputX.value = "";
+        }
+      });
+    })
+    .catch((err) => console.error("Error cargando ejemplos:", err));
 
   // =====================
   // MODAL DE INFORMACIÓN
@@ -800,8 +908,29 @@
   const resultPx = document.getElementById("poisson-result-px");
   const resultEx = document.getElementById("poisson-result-ex");
   const resultVarX = document.getElementById("poisson-result-varx");
+  const selectEj = document.getElementById("poisson-ejemplos-select");
+
 
   let poissonChart = null;
+   fetch("data/ejemplos.json")
+    .then((res) => res.json())
+    .then((ejemplos) => {
+      // Cuando el usuario selecciona un ejemplo
+      selectEj.addEventListener("change", () => {
+        const key = selectEj.value;
+        if (key && ejemplos[key]) {
+          const ej = ejemplos[key];
+          inputLambda.value = ej.lambda;
+          inputX.value = ej.x;
+          // Opcional: mostrar descripción
+          console.log(`Ejemplo seleccionado: ${ej.desc}`);
+        } else {
+          inputP.value = "";
+          inputX.value = "";
+        }
+      });
+    })
+    .catch((err) => console.error("Error cargando ejemplos:", err));
 
   // =====================
   // Modal de información
@@ -952,8 +1081,32 @@
   const resultPx = document.getElementById("hipergeometrica-result-px");
   const resultEx = document.getElementById("hipergeometrica-result-ex");
   const resultVarX = document.getElementById("hipergeometrica-result-varx");
+  const selectEj = document.getElementById("hipergeometrica-ejemplos-select");
+
 
   let hipergeometricaChart = null;
+
+   fetch("data/ejemplos.json")
+    .then((res) => res.json())
+    .then((ejemplos) => {
+      // Cuando el usuario selecciona un ejemplo
+      selectEj.addEventListener("change", () => {
+        const key = selectEj.value;
+        if (key && ejemplos[key]) {
+          const ej = ejemplos[key];
+          inputN.value = ej.N;
+          inputK.value = ej.K;
+          inputn.value = ej.n;
+          inputX.value = ej.x;
+          // Opcional: mostrar descripción
+          console.log(`Ejemplo seleccionado: ${ej.desc}`);
+        } else {
+          inputP.value = "";
+          inputX.value = "";
+        }
+      });
+    })
+    .catch((err) => console.error("Error cargando ejemplos:", err));
 
   // =====================
   // MODAL DE INFORMACIÓN
