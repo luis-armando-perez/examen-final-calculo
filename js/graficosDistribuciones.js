@@ -1082,6 +1082,10 @@
           ticks: { stepSize: 0.05 },
         },
       },
+      animation: {
+        duration: 1500, // Duración en ms (1.5 segundos)
+        easing: "easeOutBounce", // Tipo de animación
+      },
     };
 
     const ctx = document
