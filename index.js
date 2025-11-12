@@ -193,26 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   // === Estilo global moderno para SELECT y OPTION ===
 const globalSelectStyles = `
-    body {
-      opacity: 0;
-      transform: translateX(-50px); /* Empieza a la izquierda */
-      animation: slideFadeIn 1s ease-out forwards;
-      background: #f0f4f8;
-      font-family: 'Poppins', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
 
-    @keyframes slideFadeIn {
-      from {
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
-    }
 
 
 select {
