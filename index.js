@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", () => {
     <nav class="fixed top-0 left-0 w-full bg-white shadow-md z-50">
       <div class="flex justify-between items-center px-6 py-3">
         <!-- Logo -->
-        <div class="text-2xl font-extrabold text-blue-600">xddd</div>
+        <div class="text-2xl font-extrabold text-blue-600">            <a href="index.html"
+            >La calculadora</a></div>
 
         <!-- Botón Hamburguesa -->
         <button id="menu-toggle"
