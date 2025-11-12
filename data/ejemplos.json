@@ -138,11 +138,7 @@
     "desc": "Encontrar el límite inferior de la probabilidad de que un proceso dure entre 5 y 45 minutos (dentro de 4 desviaciones estándar de la media 25)."
   },
   "markov-1-clima": {
-    "estados": [
-      "Soleado",
-      "Nublado",
-      "Lluvioso"
-    ],
+    "estados": ["Soleado", "Nublado", "Lluvioso"],
     "probabilidades_transicion": [
       [0.7, 0.2, 0.1],
       [0.3, 0.4, 0.3],
@@ -151,10 +147,7 @@
     "desc": "Modelo del clima diario. Fila 1: Prob. de pasar de Soleado a (Soleado, Nublado, Lluvioso)."
   },
   "markov-2-marca": {
-    "estados": [
-      "Marca A",
-      "Marca B"
-    ],
+    "estados": ["Marca A", "Marca B"],
     "probabilidades_transicion": [
       [0.9, 0.1],
       [0.2, 0.8]
@@ -162,15 +155,136 @@
     "desc": "Modelo de lealtad de marca. Fila 1: Prob. de que un cliente de A se quede en A (0.9) o cambie a B (0.1) en el siguiente periodo."
   },
   "markov-3-maquina": {
-    "estados": [
-      "Operativa",
-      "Averiada"
-    ],
+    "estados": ["Operativa", "Averiada"],
     "probabilidades_transicion": [
       [0.98, 0.02],
       [0.4, 0.6]
     ],
     "desc": "Modelo de estado de una máquina. Fila 1: Prob. de que una máquina operativa siga operativa (0.98) o se averíe (0.02)."
+  },
+  "uniforme-1": {
+    "a": 10,
+    "b": 20,
+    "x": 18,
+    "type": "less",
+    "desc": "Tiempo de espera P(X ≤ 18) en un rango de 10 a 20 minutos."
+  },
+  "uniforme-2": {
+    "a": 50,
+    "b": 150,
+    "a2": 80,
+    "b2": 120,
+    "type": "between",
+    "desc": "Nivel de ruido P(80 ≤ X ≤ 120) en un rango de 50 a 150 dB."
+  },
+  "uniforme-3": {
+    "a": -3,
+    "b": 3,
+    "x": 4,
+    "type": "density",
+    "desc": "Densidad en x=4. Parámetros a=-3, b=3."
+  },
+  "normal-1": {
+    "mu": 170,
+    "sigma": 5,
+    "x": 175,
+    "type": "less",
+    "desc": "Altura: Prob. de medir 175cm o menos (μ=170, σ=5)."
+  },
+  "normal-2": {
+    "mu": 500,
+    "sigma": 50,
+    "a": 400,
+    "b": 600,
+    "type": "between",
+    "desc": "Puntuación de examen: Prob. de obtener entre 400 y 600 puntos (μ=500, σ=50)."
+  },
+  "normal-3": {
+    "mu": 100,
+    "sigma": 15,
+    "x": 120,
+    "type": "greater",
+    "desc": "Coeficiente Intelectual (CI): Prob. de tener un CI de 120 o más (μ=100, σ=15)."
+  },
+  "exponencial-1": {
+    "lambda": 0.2,
+    "x": 5,
+    "type": "less",
+    "desc": "Tiempo de falla: P(X ≤ 5) con Tasa (λ)=0.2"
+  },
+  "exponencial-2": {
+    "lambda": 0.5,
+    "x": 6,
+    "type": "greater",
+    "desc": "Tiempo de atención: P(X ≥ 6) con Tasa (λ)=0.5"
+  },
+  "exponencial-3": {
+    "lambda": 0.1,
+    "x": 10,
+    "type": "density",
+    "desc": "Densidad: f(10) con Tasa (λ)=0.1"
+  },
+  "lognormal-1": {
+    "mu": 6.5,
+    "sigma": 0.4,
+    "x": 1000,
+    "type": "less",
+    "desc": "Tiempo de vida útil: P(X ≤ 1000) con μ=6.5, σ=0.4"
+  },
+  "lognormal-2": {
+    "mu": 10.0,
+    "sigma": 0.8,
+    "x": 35000,
+    "type": "greater",
+    "desc": "Ingreso: P(X ≥ 35000) con μ=10.0, σ=0.8"
+  },
+  "lognormal-3": {
+    "mu": 2.0,
+    "sigma": 1.0,
+    "x": 10,
+    "type": "density",
+    "desc": "Densidad en f(10) con μ=2.0, σ=1.0"
+  },
+  "gamma-1": {
+    "alpha": 5.0,
+    "beta": 0.2,
+    "x": 15,
+    "type": "less",
+    "desc": "Tiempo acumulado: P(X ≤ 15) con Forma (α)=5, Tasa (β)=0.2"
+  },
+  "gamma-2": {
+    "alpha": 2.5,
+    "beta": 0.5,
+    "x": 8,
+    "type": "greater",
+    "desc": "Tiempo de espera: P(X ≥ 8) con Forma (α)=2.5, Tasa (β)=0.5"
+  },
+  "gamma-3": {
+    "alpha": 1.0,
+    "beta": 0.1,
+    "x": 5,
+    "type": "density",
+    "desc": "Densidad: f(5). (Comprueba el caso Exponencial α=1)"
+  },
+  "beta-1": {
+    "alpha": 9.0,
+    "beta": 3.0,
+    "x": 0.80,
+    "type": "less",
+    "desc": "Prob. de Éxito: P(X ≤ 0.80) con α=9, β=3"
+  },
+  "beta-2": {
+    "alpha": 2.0,
+    "beta": 2.0,
+    "x": 0.60,
+    "type": "greater",
+    "desc": "Distribución Simétrica: P(X ≥ 0.60) con α=2, β=2"
+  },
+  "beta-3": {
+    "alpha": 0.5,
+    "beta": 0.5,
+    "x": 0.25,
+    "type": "density",
+    "desc": "Densidad: f(0.25) con α=0.5, β=0.5 (Forma de U)"
   }
-
 }

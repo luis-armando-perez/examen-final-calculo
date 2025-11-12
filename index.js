@@ -24,11 +24,16 @@ document.addEventListener("DOMContentLoaded", () => {
               class="block px-4 py-2 text-gray-700 hover:text-blue-600 font-medium">Chebyshev</a>
           </li>
 
+          <li>
+            <a href="markov.html"
+              class="block px-4 py-2 text-gray-700 hover:text-blue-600 font-medium">Markov</a>
+          </li>
+
           <!-- Submenú -->
           <li class="relative">
             <div class="flex items-center justify-between px-4 py-2 text-gray-700 font-medium">
               <a href="./distribucionesD.html" class="hover:text-blue-600">
-                Distribuciones
+                Discretas
               </a>
               <button id="distribuciones-btn" class="ml-2 text-gray-700 hover:text-blue-600 focus:outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4"
@@ -59,10 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </ul>
           </li>
 
-          <li>
-            <a href="markov.html"
-              class="block px-4 py-2 text-gray-700 hover:text-blue-600 font-medium">Markov</a>
-          </li>
+          
 
           <li class="relative">
 
@@ -188,4 +190,79 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+  // === Estilo global moderno para SELECT y OPTION ===
+const globalSelectStyles = `
+    body {
+      opacity: 0;
+      transform: translateX(-50px); /* Empieza a la izquierda */
+      animation: slideFadeIn 1s ease-out forwards;
+      background: #f0f4f8;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    @keyframes slideFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 220px;
+  padding: 0.6rem 1.2rem;
+  border: 2px solid #e2e8f0;
+  border-radius: 0.6rem;
+  background: #f9fafb url('data:image/svg+xml;utf8,<svg fill="%236b7280" height="20" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M7 8l3 3 3-3z"/></svg>') no-repeat right 0.8rem center;
+  background-size: 1rem;
+  color: #1e293b;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.50s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+select:hover {
+  border-color: #94a3b8;
+  background-color: #f1f5f9;
+}
+
+select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.25);
+  background-color: #fff;
+}
+
+option {
+  font-weight: 500;
+  background-color: #fff;
+  color: #1e293b;
+}
+
+option:hover {
+  background-color: #e2e8f0;
+}
+
+option:checked {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+`;
+
+// Inyectar los estilos globales al documento
+const styleTag = document.createElement("style");
+styleTag.textContent = globalSelectStyles;
+document.head.appendChild(styleTag);
+
 });
