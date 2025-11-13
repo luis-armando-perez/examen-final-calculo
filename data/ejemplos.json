@@ -1,0 +1,290 @@
+{
+  "bernoulli-1": {
+    "p": 0.5,
+    "x": 1,
+    "desc": "Lanzamiento de moneda - probabilidad de cara"
+  },
+  "bernoulli-2": {
+    "p": 0.3,
+    "x": 1,
+    "desc": "Encuesta - probabilidad de respuesta 'sí'"
+  },
+  "bernoulli-3": {
+    "p": 0.05,
+    "x": 1,
+    "desc": "Control de calidad - probabilidad de defectuoso"
+  },
+  "binomial-1": {
+    "n": 10,
+    "p": 0.5,
+    "x": 6,
+    "desc": "Probabilidad de obtener 6 caras en 10 lanzamientos de una moneda imparcial."
+  },
+  "binomial-2": {
+    "n": 30,
+    "p": 0.8,
+    "x": 25,
+    "desc": "Probabilidad de que exactamente 25 personas de 30 encuestadas hayan visto un evento reciente (tasa de éxito del 80%)."
+  },
+  "binomial-3": {
+    "n": 20,
+    "p": 0.75,
+    "x": 18,
+    "desc": "Probabilidad de que 18 pacientes de 20 reaccionen positivamente a un tratamiento médico (probabilidad de éxito individual del 75%)."
+  },
+  "geometrica-1": {
+    "p": 0.2,
+    "x": 4,
+    "desc": "Probabilidad de que el primer cliente que realice una compra sea el cuarto cliente en entrar a la tienda (tasa de compra del 20%)."
+  },
+  "geometrica-2": {
+    "p": 0.01,
+    "x": 50,
+    "desc": "Probabilidad de que el primer defecto en un proceso de producción ocurra en el 50º artículo inspeccionado (tasa de defecto del 1%)."
+  },
+  "geometrica-3": {
+    "p": 0.15,
+    "x": 8,
+    "desc": "Probabilidad de que un vendedor realice su primera venta al octavo intento de llamada (tasa de éxito del 15%)."
+  },
+  "binomial-negativa-1": {
+    "p": 0.5,
+    "r": 5,
+    "x": 8,
+    "desc": "Probabilidad de que se requieran exactamente 8 lanzamientos de una moneda para obtener 5 caras (éxitos)."
+  },
+  "binomial-negativa-2": {
+    "p": 0.05,
+    "r": 2,
+    "x": 15,
+    "desc": "Probabilidad de que el segundo artículo defectuoso (éxito) aparezca en el 15º artículo inspeccionado, dada una tasa de defecto del 5%."
+  },
+  "binomial-negativa-3": {
+    "p": 0.15,
+    "r": 3,
+    "x": 12,
+    "desc": "Probabilidad de que un vendedor consiga su tercera venta (éxito) exactamente en su 12º intento de llamada (tasa de éxito del 15%)."
+  },
+  "binomial-negativa-fracasos-1": {
+    "p": 0.5,
+    "r": 5,
+    "y": 3,
+    "desc": "Prob. de 3 fracasos antes del 5º éxito (caras) en lanzamientos de moneda."
+  },
+  "binomial-negativa-fracasos-2": {
+    "p": 0.05,
+    "r": 2,
+    "y": 13,
+    "desc": "Prob. de 13 artículos buenos (fracasos) antes del 2º artículo defectuoso (éxito)."
+  },
+  "binomial-negativa-fracasos-3": {
+    "p": 0.15,
+    "r": 3,
+    "y": 9,
+    "desc": "Prob. de 9 intentos fallidos (fracasos) antes de la 3ª venta (éxito) de un vendedor."
+  },
+  "poisson-1": {
+    "lambda": 3.5,
+    "x": 5,
+    "desc": "Prob. de que lleguen 5 autos a un peaje en un minuto, si llegan en promedio 3.5 por minuto."
+  },
+  "poisson-2": {
+    "lambda": 1.2,
+    "x": 0,
+    "desc": "Prob. de que no haya fallas (0 eventos) en una hora de servidor, si la tasa media es de 1.2 fallas por hora."
+  },
+  "poisson-3": {
+    "lambda": 6,
+    "x": 10,
+    "desc": "Prob. de recibir 10 llamadas en una hora, si el centro de llamadas recibe en promedio 6 llamadas por hora."
+  },
+  "hipergeometrica-1": {
+    "N": 50,
+    "K": 10,
+    "n": 5,
+    "x": 2,
+    "desc": "Prob. de seleccionar 2 fusibles defectuosos (éxitos) en una muestra de 5, de una caja de 50 con 10 defectuosos."
+  },
+  "hipergeometrica-2": {
+    "N": 20,
+    "K": 8,
+    "n": 6,
+    "x": 3,
+    "desc": "Prob. de elegir 3 estudiantes de ingeniería (éxitos) en una muestra de 6, de un grupo de 20 con 8 ingenieros."
+  },
+  "hipergeometrica-3": {
+    "N": 40,
+    "K": 4,
+    "n": 10,
+    "x": 1,
+    "desc": "Prob. de encontrar 1 carta de corazones (éxito) en una mano de 10 cartas, de una baraja de 40 cartas (4 corazones)."
+  },
+  "chebyshev-1": {
+    "mu": 100,
+    "sigma": 15,
+    "k": 2,
+    "desc": "Calcular la proporción de puntuaciones de un examen que caen entre 70 y 130 (dentro de 2 desviaciones estándar de la media 100)."
+  },
+  "chebyshev-2": {
+    "mu": 50000,
+    "sigma": 5000,
+    "k": 3,
+    "desc": "Determinar la proporción mínima de salarios que caen entre $35,000 y $65,000 (dentro de 3 desviaciones estándar de la media $50,000)."
+  },
+  "chebyshev-3": {
+    "mu": 25,
+    "sigma": 5,
+    "k": 4,
+    "desc": "Encontrar el límite inferior de la probabilidad de que un proceso dure entre 5 y 45 minutos (dentro de 4 desviaciones estándar de la media 25)."
+  },
+  "markov-1-clima": {
+    "estados": ["Soleado", "Nublado", "Lluvioso"],
+    "probabilidades_transicion": [
+      [0.7, 0.2, 0.1],
+      [0.3, 0.4, 0.3],
+      [0.2, 0.3, 0.5]
+    ],
+    "desc": "Modelo del clima diario. Fila 1: Prob. de pasar de Soleado a (Soleado, Nublado, Lluvioso)."
+  },
+  "markov-2-marca": {
+    "estados": ["Marca A", "Marca B"],
+    "probabilidades_transicion": [
+      [0.9, 0.1],
+      [0.2, 0.8]
+    ],
+    "desc": "Modelo de lealtad de marca. Fila 1: Prob. de que un cliente de A se quede en A (0.9) o cambie a B (0.1) en el siguiente periodo."
+  },
+  "markov-3-maquina": {
+    "estados": ["Operativa", "Averiada"],
+    "probabilidades_transicion": [
+      [0.98, 0.02],
+      [0.4, 0.6]
+    ],
+    "desc": "Modelo de estado de una máquina. Fila 1: Prob. de que una máquina operativa siga operativa (0.98) o se averíe (0.02)."
+  },
+  "uniforme-1": {
+    "a": 10,
+    "b": 20,
+    "x": 18,
+    "type": "less",
+    "desc": "Tiempo de espera P(X ≤ 18) en un rango de 10 a 20 minutos."
+  },
+  "uniforme-2": {
+    "a": 50,
+    "b": 150,
+    "a2": 80,
+    "b2": 120,
+    "type": "between",
+    "desc": "Nivel de ruido P(80 ≤ X ≤ 120) en un rango de 50 a 150 dB."
+  },
+  "uniforme-3": {
+    "a": -3,
+    "b": 3,
+    "x": 4,
+    "type": "density",
+    "desc": "Densidad en x=4. Parámetros a=-3, b=3."
+  },
+  "normal-1": {
+    "mu": 170,
+    "sigma": 5,
+    "x": 175,
+    "type": "less",
+    "desc": "Altura: Prob. de medir 175cm o menos (μ=170, σ=5)."
+  },
+  "normal-2": {
+    "mu": 500,
+    "sigma": 50,
+    "a": 400,
+    "b": 600,
+    "type": "between",
+    "desc": "Puntuación de examen: Prob. de obtener entre 400 y 600 puntos (μ=500, σ=50)."
+  },
+  "normal-3": {
+    "mu": 100,
+    "sigma": 15,
+    "x": 120,
+    "type": "greater",
+    "desc": "Coeficiente Intelectual (CI): Prob. de tener un CI de 120 o más (μ=100, σ=15)."
+  },
+  "exponencial-1": {
+    "lambda": 0.2,
+    "x": 5,
+    "type": "less",
+    "desc": "Tiempo de falla: P(X ≤ 5) con Tasa (λ)=0.2"
+  },
+  "exponencial-2": {
+    "lambda": 0.5,
+    "x": 6,
+    "type": "greater",
+    "desc": "Tiempo de atención: P(X ≥ 6) con Tasa (λ)=0.5"
+  },
+  "exponencial-3": {
+    "lambda": 0.1,
+    "x": 10,
+    "type": "density",
+    "desc": "Densidad: f(10) con Tasa (λ)=0.1"
+  },
+  "lognormal-1": {
+    "mu": 6.5,
+    "sigma": 0.4,
+    "x": 1000,
+    "type": "less",
+    "desc": "Tiempo de vida útil: P(X ≤ 1000) con μ=6.5, σ=0.4"
+  },
+  "lognormal-2": {
+    "mu": 10.0,
+    "sigma": 0.8,
+    "x": 35000,
+    "type": "greater",
+    "desc": "Ingreso: P(X ≥ 35000) con μ=10.0, σ=0.8"
+  },
+  "lognormal-3": {
+    "mu": 2.0,
+    "sigma": 1.0,
+    "x": 10,
+    "type": "density",
+    "desc": "Densidad en f(10) con μ=2.0, σ=1.0"
+  },
+  "gamma-1": {
+    "alpha": 5.0,
+    "beta": 0.2,
+    "x": 15,
+    "type": "less",
+    "desc": "Tiempo acumulado: P(X ≤ 15) con Forma (α)=5, Tasa (β)=0.2"
+  },
+  "gamma-2": {
+    "alpha": 2.5,
+    "beta": 0.5,
+    "x": 8,
+    "type": "greater",
+    "desc": "Tiempo de espera: P(X ≥ 8) con Forma (α)=2.5, Tasa (β)=0.5"
+  },
+  "gamma-3": {
+    "alpha": 1.0,
+    "beta": 0.1,
+    "x": 5,
+    "type": "density",
+    "desc": "Densidad: f(5). (Comprueba el caso Exponencial α=1)"
+  },
+  "beta-1": {
+    "alpha": 9.0,
+    "beta": 3.0,
+    "x": 0.80,
+    "type": "less",
+    "desc": "Prob. de Éxito: P(X ≤ 0.80) con α=9, β=3"
+  },
+  "beta-2": {
+    "alpha": 2.0,
+    "beta": 2.0,
+    "x": 0.60,
+    "type": "greater",
+    "desc": "Distribución Simétrica: P(X ≥ 0.60) con α=2, β=2"
+  },
+  "beta-3": {
+    "alpha": 0.5,
+    "beta": 0.5,
+    "x": 0.25,
+    "type": "density",
+    "desc": "Densidad: f(0.25) con α=0.5, β=0.5 (Forma de U)"
+  }
+}

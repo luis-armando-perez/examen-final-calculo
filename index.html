@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora del Teorema de Chebyshev</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script
+      type="text/javascript"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+    ></script>
+    <script src="./index.js" defer></script>
+    <style>
+      /* Estilos generales */
+      .input-group input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 0.875rem;
+      }
+      /* Estilos para el Modal (mantienen la misma estructura) */
+      .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+      }
+      .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 25px;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      }
+      .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 30px;
+        font-weight: bold;
+      }
+      .close-btn:hover {
+        color: #000;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 p-6">
+    <div
+      id="navBar"
+      class="bg-white shadow-md fixed w-full z-20 top-0 left-0"
+    ></div>
+
+    <div class="mt-16">
+      <h1
+        class="text-4xl font-extrabold text-center text-blue-700 mb-8 border-b pb-3"
+      >
+        Teorema de Chebyshev (Desigualdad de Chebyshev)
+      </h1>
+
+      <div
+        id="card-chebychev"
+        class="bg-white p-8 rounded-lg shadow-2xl border-t-4 border-blue-500 flex flex-col"
+      >
+        <div class="flex justify-between items-center mb-6 border-b pb-2">
+          <h2 class="text-2xl font-bold text-gray-800">
+            Cálculo de Probabilidad y Rangos
+          </h2>
+          <button
+            id="chebychev-info-btn"
+            data-info-key="chebychev"
+            class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl"
+          >
+            ℹ️
+          </button>
+        </div>
+
+        <!-- SELECT DE EJEMPLOS - NUEVO -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-700 mb-2"
+            >Cargar ejemplo:</label
+          >
+          <select
+            id="chebychev-ejemplos-select"
+            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+
+            <option value="chebyshev-1">
+              Calcular la proporción de puntuaciones de un examen que caen entre 70 y 130 (dentro de 2 desviaciones estándar de la media 100).
+            </option>
+            <option value="chebyshev-2">
+              Determinar la proporción mínima de salarios que caen entre $35,000 y $65,000 (dentro de 3 desviaciones estándar de la media $50,000).
+            </option>
+            <option value="chebyshev-3">
+              Encontrar el límite inferior de la probabilidad de que un proceso dure entre 5 y 45 minutos (dentro de 4 desviaciones estándar de la media 25).
+            </option>
+          </select>
+        </div>
+
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="input-group">
+            <label class="block text-sm font-medium text-gray-700"
+              >Media (μ)</label
+            >
+            <input
+              type="number"
+              step="0.01"
+              id="chebychev-input-mu"
+              class="mt-1 block w-full"
+              placeholder="Ej: 50"
+            />
+          </div>
+
+          <div class="input-group">
+            <label class="block text-sm font-medium text-gray-700"
+              >Desviación Estándar (σ)</label
+            >
+            <input
+              type="number"
+              step="0.01"
+              min="0.01"
+              id="chebychev-input-sigma"
+              class="mt-1 block w-full"
+              placeholder="Ej: 5"
+            />
+          </div>
+
+          <div class="input-group">
+            <label class="block text-sm font-medium text-gray-700"
+              >Constante (k > 1)</label
+            >
+            <input
+              type="number"
+              step="0.01"
+              min="1.01"
+              id="chebychev-input-k"
+              class="mt-1 block w-full"
+              placeholder="Ej: 2 o 3"
+            />
+          </div>
+        </div>
+
+        <button
+          class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-150 mb-6"
+          id="chebychev-calc-btn"
+        >
+          Calcular Teorema y Rangos
+        </button>
+
+        <div class="mt-4 pt-4 border-t border-gray-200">
+          <h3 class="text-xl font-semibold text-gray-700 mb-3">
+            Resultados del Teorema:
+          </h3>
+
+          <div
+            class="bg-yellow-50 p-4 rounded-lg border border-yellow-300 mb-4"
+          >
+            <p class="text-lg text-gray-900 font-bold mb-2">
+              Probabilidad Mínima (P):
+            </p>
+            <p
+              class="text-2xl font-mono text-center text-red-700"
+              id="chebychev-result-prob"
+            >
+              ---
+            </p>
+            <p class="text-sm text-gray-600 mt-2 text-center">
+              La probabilidad de que una variable caiga dentro de k desviaciones
+              estándar es al menos P.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-300">
+              <p class="text-sm font-semibold text-gray-700">
+                Rango Inferior (μ - kσ):
+              </p>
+              <p
+                class="text-xl font-mono text-blue-800"
+                id="chebychev-result-lower"
+              >
+                ---
+              </p>
+            </div>
+            <div class="bg-blue-50 p-3 rounded-lg border border-blue-300">
+              <p class="text-sm font-semibold text-gray-700">
+                Rango Superior (μ + kσ):
+              </p>
+              <p
+                class="text-xl font-mono text-blue-800"
+                id="chebychev-result-upper"
+              >
+                ---
+              </p>
+            </div>
+          </div>
+
+          <p class="text-sm text-gray-600 mt-4">
+            <span class="font-bold">Interpretación:</span> Al menos el
+            <span
+              id="chebychev-result-prob-percent"
+              class="font-bold text-red-700"
+              >---</span
+            >
+            de los datos caerá entre el rango inferior y el rango superior.
+          </p>
+        </div>
+
+        <button
+          class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg transition duration-150 mb-6"
+          id="mostrar-grafico"
+        >
+          Mostrar grafico
+        </button>
+      </div>
+    </div>
+
+    <div id="infoModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeModalBtn">&times;</span>
+        <h3 id="modalTitle" class="text-2xl font-bold text-blue-700 mb-3"></h3>
+        <p id="modalText" class="text-gray-700 mb-4"></p>
+        <div
+          id="modalFormulaProb"
+          class="text-center font-mono border-b pb-3 mb-3"
+        ></div>
+        <div id="modalFormulaRange" class="text-center font-mono"></div>
+      </div>
+    </div>
+
+    <!-- Modal con fondo oscuro -->
+    <div
+      id="modalGrafico"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 transition-opacity duration-300"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl p-6 w-11/12 max-w-2xl relative animate-fadeIn"
+      >
+        <!-- Botón cerrar -->
+        <button
+          id="cerrar-modal"
+          class="absolute top-3 right-3 text-gray-400 hover:text-gray-600 text-2xl font-bold"
+        >
+          &times;
+        </button>
+
+        <h2 class="text-center text-2xl font-bold text-gray-700 mb-4">
+          Gráfico - Teorema de Chebyshev
+        </h2>
+
+        <!-- Contenedor del gráfico -->
+        <canvas id="chebychev-chart" height="220"></canvas>
+      </div>
+    </div>
+
+    <script>
+      // Función global para abrir el modal
+      function openModal(title, text, formulaProb, formulaRange) {
+        document.getElementById("modalTitle").innerHTML = title;
+        document.getElementById("modalText").innerHTML = text;
+
+        document.getElementById("modalFormulaProb").innerHTML = formulaProb
+          ? `Teorema (Probabilidad Mínima): $$${formulaProb}$$`
+          : "";
+        document.getElementById("modalFormulaRange").innerHTML = formulaRange
+          ? `Rango de Interés: ${formulaRange}`
+          : "";
+
+        document.getElementById("infoModal").style.display = "block";
+
+        // Re-renderizar fórmulas MathJax
+        if (window.MathJax) {
+          MathJax.Hub.Queue([
+            "Typeset",
+            MathJax.Hub,
+            "modalFormulaProb",
+            "modalFormulaRange",
+          ]);
+        }
+      }
+
+      // Lógica para cerrar el modal
+      document.getElementById("closeModalBtn").onclick = function () {
+        document.getElementById("infoModal").style.display = "none";
+      };
+      window.onclick = function (event) {
+        if (event.target == document.getElementById("infoModal")) {
+          document.getElementById("infoModal").style.display = "none";
+        }
+      };
+    </script>
+    <script src="./js/chebychev.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      const btnMostrar = document.getElementById("mostrar-grafico");
+      const modal = document.getElementById("modalGrafico");
+      const btnCerrar = document.getElementById("cerrar-modal");
+
+      btnMostrar.addEventListener("click", () => {
+        modal.classList.remove("hidden");
+      });
+
+      btnCerrar.addEventListener("click", () => {
+        modal.classList.add("hidden");
+      });
+
+      // Cerrar si se hace clic fuera del cuadro
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.add("hidden");
+      });
+    </script>
+  </body>
+</html>
