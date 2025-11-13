@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Distribuciones Continuas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script src="./index.js" defer></script>
+
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+      };
+    </script>
+    <script
+      type="text/javascript"
+      async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"
+    ></script>
+  </head>
+  <body class="bg-gray-50 p-6">
+    <div id="navBar"></div>
+    <h1
+      class="mt-10 mb-12 text-3xl lg:text-4xl font-extrabold text-center text-blue-800 border-b-4 border-blue-300 pb-3"
+    >
+Calculadora de Distribuciones Continuasasdasaf
+    </h1>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!--card uniforme-->
+      <div
+        id="card-uniforme"
+        class="card bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-200 flex flex-col mt-10"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center mb-5 pb-3 border-b border-gray-200"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
+            Distribución Uniforme
+          </h2>
+          <button
+            id="uniforme-info-btn"
+            class="text-red-600 hover:text-red-700 transition-colors text-xl"
+          >
+            ℹ️
+          </button>
+        </div>
+
+        <!-- Ejemplos -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Cargar ejemplo
+          </label>
+          <select
+            id="uniforme-ejemplos-select"
+            onchange="controlUniforme('ejemplo')"
+            class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500 p-2 bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+            <option value="uniforme-1">
+              Tiempo de espera P(X ≤ 18) en un rango de 10 a 20 minutos.
+            </option>
+            <option value="uniforme-2">
+              Nivel de ruido P(80 ≤ X ≤ 120) en un rango de 50 a 150 dB.
+            </option>
+            <option value="uniforme-3">
+              Densidad en x=4. Parámetros a=-3, b=3.
+            </option>
+          </select>
+        </div>
+
+        <!-- Inputs -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Límite inferior (a)</label
+            >
+            <input
+              id="uniforme-input-a"
+              type="number"
+              step="0.1"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Límite superior (b)</label
+            >
+            <input
+              id="uniforme-input-b"
+              type="number"
+              step="0.1"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700">
+              Tipo de probabilidad
+            </label>
+            <select
+              id="uniforme-input-type"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            >
+              <option value="less">P(X ≤ x)</option>
+              <option value="greater">P(X ≥ x)</option>
+              <option value="between">P(a ≤ X ≤ b)</option>
+              <option value="density">Densidad f(x)</option>
+            </select>
+          </div>
+
+          <!-- Input X -->
+          <div id="uniforme-input-x-group">
+            <label class="text-sm font-semibold text-gray-700">Valor x</label>
+            <input
+              id="uniforme-input-x"
+              type="number"
+              step="0.01"
+              placeholder="Valor x"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <!-- Rango -->
+          <div class="flex space-x-3 hidden" id="uniforme-input-range-group">
+            <div class="flex-1">
+              <label class="text-sm font-semibold text-gray-700">Valor a</label>
+              <input
+                id="uniforme-input-a2"
+                type="number"
+                step="0.01"
+                class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+              />
+            </div>
+
+            <div class="flex-1">
+              <label class="text-sm font-semibold text-gray-700">Valor b</label>
+              <input
+                id="uniforme-input-b2"
+                type="number"
+                step="0.01"
+                class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Resultado -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700">
+            Resultado
+          </label>
+          <input
+            id="uniforme-result-prob"
+            readonly
+            class="mt-1 w-full bg-gray-100 text-gray-900 font-mono p-2 rounded-lg border border-gray-200"
+            placeholder="P o f(x)"
+          />
+        </div>
+
+        <!-- Buttons -->
+        <button
+          id="uniforme-calc-btn"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg mb-3 transition"
+        >
+          Calcular
+        </button>
+
+        <button
+          id="uniforme-graph-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Mostrar gráfico
+        </button>
+
+        <!-- Resultados -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-bold text-gray-700 mb-3">Resultados</h3>
+          <p class="text-sm font-mono">
+            E[X]: <span id="uniforme-result-ex" class="font-bold">---</span>
+          </p>
+          <p class="text-sm font-mono">
+            Var(X): <span id="uniforme-result-varx" class="font-bold">---</span>
+          </p>
+        </div>
+
+        <!-- MODAL INFO UNIFORME -->
+        <div
+          id="modal-uniforme-info"
+          class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden"
+        >
+          <div
+            class="bg-white w-11/12 max-w-lg p-6 rounded-xl shadow-xl relative"
+          >
+            <button
+              id="modal-uniforme-info-close"
+              class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ✖
+            </button>
+
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">
+              Distribución Uniforme
+            </h2>
+
+            <p class="text-gray-700 mb-3">
+              En una distribución uniforme continua todos los valores dentro del
+              intervalo <span class="font-semibold">[a, b]</span> tienen la
+              misma probabilidad.
+            </p>
+
+            <p class="text-gray-700 mb-2">Densidad:</p>
+
+            <pre class="bg-gray-100 p-3 rounded text-center font-mono">
+f(x) = 1 / (b - a)
+    </pre
+            >
+
+            <p class="text-gray-700 mt-3">
+              Es útil para modelar fenómenos con distribución constante dentro
+              de un rango definido.
+            </p>
+          </div>
+        </div>
+
+        <!-- MODAL GRAFICO UNIFORME -->
+        <div
+          id="modal-uniforme-graph"
+          class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden z-50"
+        >
+          <div
+            class="bg-white w-11/12 max-w-4xl p-6 rounded-xl shadow-xl relative"
+          >
+            <button
+              id="modal-uniforme-graph-close"
+              class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ✖
+            </button>
+
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">
+              Gráfico de la Distribución Uniforme
+            </h2>
+
+            <canvas id="uniforme-chart" height="140"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!--card normal-->
+      <div
+        id="card-normal"
+        class="card mt-10 bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-200 flex flex-col h-full"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center mb-5 pb-3 border-b border-gray-200"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
+            Distribución Normal
+          </h2>
+          <button
+            id="normal-info-btn"
+            class="text-red-600 hover:text-red-700 transition-colors text-xl"
+          >
+            ℹ️
+          </button>
+        </div>
+
+        <!-- Ejemplos -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Cargar ejemplo
+          </label>
+          <select
+            id="normal-ejemplos-select"
+            onchange="controlNormal('ejemplo')"
+            class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500 p-2 bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+            <option value="normal-1">
+              Altura: Prob. de medir 175cm o menos (μ=170, σ=5).
+            </option>
+            <option value="normal-2">
+              Puntuación de examen: Prob. de obtener entre 400 y 600 puntos
+              (μ=500, σ=50).
+            </option>
+            <option value="normal-3">
+              Coeficiente Intelectual (CI): Prob. de tener un CI de 120 o más
+              (μ=100, σ=15).
+            </option>
+          </select>
+        </div>
+
+        <!-- Inputs -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="text-sm font-semibold text-gray-700">Media (μ)</label>
+            <input
+              id="normal-input-mu"
+              type="number"
+              step="0.1"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Desviación Estándar (σ)</label
+            >
+            <input
+              id="normal-input-sigma"
+              type="number"
+              step="0.1"
+              min="0.001"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Tipo de probabilidad</label
+            >
+            <select
+              id="normal-input-type"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            >
+              <option value="less">P(X ≤ x)</option>
+              <option value="greater">P(X ≥ x)</option>
+              <option value="between">P(a ≤ X ≤ b)</option>
+              <option value="density">Densidad f(x)</option>
+            </select>
+          </div>
+
+          <!-- X -->
+          <div id="normal-input-x-group">
+            <label class="text-sm font-semibold text-gray-700"
+              >Valor de x</label
+            >
+            <input
+              id="normal-input-x"
+              type="number"
+              step="0.01"
+              placeholder="Valor x"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <!-- Rango -->
+          <div class="flex space-x-3 hidden" id="normal-input-range-group">
+            <div class="flex-1">
+              <label class="text-sm font-semibold text-gray-700">Valor a</label>
+              <input
+                id="normal-input-a"
+                type="number"
+                step="0.01"
+                class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+              />
+            </div>
+            <div class="flex-1">
+              <label class="text-sm font-semibold text-gray-700">Valor b</label>
+              <input
+                id="normal-input-b"
+                type="number"
+                step="0.01"
+                class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Resultado -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700">
+            Resultado
+          </label>
+          <input
+            id="normal-result-prob"
+            readonly
+            class="mt-1 w-full bg-gray-100 text-gray-900 font-mono p-2 rounded-lg border border-gray-200"
+            placeholder="P o f(x)"
+          />
+        </div>
+
+        <!-- Buttons -->
+        <button
+          id="normal-calc-btn"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg mb-3 transition"
+        >
+          Calcular
+        </button>
+
+        <button
+          id="normal-graph-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Mostrar gráfico
+        </button>
+
+        <!-- Resultados especiales -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-bold text-gray-700 mb-3">Resultados</h3>
+          <p class="text-sm font-mono">
+            E[X]: <span id="normal-result-ex" class="font-bold">---</span>
+          </p>
+          <p class="text-sm font-mono">
+            Var(X): <span id="normal-result-varx" class="font-bold">---</span>
+          </p>
+        </div>
+
+        <!-- Modal Info Normal -->
+        <div
+          id="modal-normal-info"
+          class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden"
+        >
+          <div
+            class="bg-white w-11/12 max-w-lg p-6 rounded-xl shadow-xl relative"
+          >
+            <button
+              id="modal-normal-info-close"
+              class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ✖
+            </button>
+
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">
+              Distribución Normal
+            </h2>
+
+            <p class="text-gray-700 leading-relaxed mb-3">
+              La distribución normal modela variables continuas que se
+              concentran cerca de la media.
+            </p>
+
+            <p class="text-gray-700 mb-4">Su función de densidad es:</p>
+
+            <p class="text-center text-xl">
+              \[ f(x)=\frac{1}{\sigma\sqrt{2\pi}}
+              e^{-\frac{(x-\mu)^2}{2\sigma^2}} \]
+            </p>
+
+            <p class="text-gray-700 mt-4">
+              La probabilidad se calcula integrando esta curva. Con valores
+              estándar usamos la tabla Z.
+            </p>
+          </div>
+        </div>
+
+        <!-- Modal Gráfico Normal -->
+        <div
+          id="modal-normal-graph"
+          class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center hidden"
+        >
+          <div
+            class="bg-white w-11/12 max-w-3xl p-6 rounded-xl shadow-xl relative"
+          >
+            <button
+              id="modal-normal-graph-close"
+              class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-xl"
+            >
+              ✖
+            </button>
+
+            <h2 class="text-2xl font-bold mb-4 text-gray-800">
+              Gráfico de la Distribución
+            </h2>
+
+            <div class="w-full">
+              <canvas id="normal-chart-canvas" height="220"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--exponencial-->
+      <!-- CARD EXPONENCIAL -->
+      <div
+        id="card-exponencial"
+        class="card bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-200 flex flex-col h-full mt-10"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center mb-5 pb-3 border-b border-gray-200"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
+            Distribución Exponencial
+          </h2>
+          <button
+            id="exponencial-info-btn"
+            class="text-red-600 hover:text-red-700 transition-colors text-xl"
+          >
+            ℹ️
+          </button>
+        </div>
+        <!-- Ejemplos -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Cargar ejemplo
+          </label>
+          <select
+            id="exponencial-ejemplos-select"
+            onchange="controlExponencial('ejemplo')"
+            class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500 p-2 bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+            <option value="exponencial-1">
+              Tiempo de falla: P(X ≤ 5) con Tasa (λ)=0.2
+            </option>
+            <option value="exponencial-2">
+              Tiempo de atención: P(X ≥ 6) con Tasa (λ)=0.5.
+            </option>
+            <option value="exponencial-3">
+              Densidad: f(10) con Tasa (λ)=0.1
+            </option>
+          </select>
+        </div>
+
+        <!-- Inputs -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="text-sm font-semibold text-gray-700">Tasa (λ)</label>
+            <input
+              id="exponencial-input-lambda"
+              type="number"
+              step="0.01"
+              min="0.001"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Tipo de probabilidad</label
+            >
+            <select
+              id="exponencial-input-type"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            >
+              <option value="less">P(X ≤ x)</option>
+              <option value="greater">P(X ≥ x)</option>
+              <option value="density">Densidad f(x)</option>
+            </select>
+          </div>
+
+          <div id="exponencial-input-x-group">
+            <label class="text-sm font-semibold text-gray-700">Valor x</label>
+            <input
+              id="exponencial-input-x"
+              type="number"
+              step="0.01"
+              placeholder="Valor x"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+        </div>
+
+        <!-- Resultado -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700"
+            >Resultado</label
+          >
+          <input
+            id="exponencial-result-prob"
+            readonly
+            class="mt-1 w-full bg-gray-100 text-gray-900 font-mono p-2 rounded-lg border border-gray-200"
+            placeholder="P o f(x)"
+          />
+        </div>
+
+        <!-- Buttons -->
+        <button
+          id="exponencial-calc-btn"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg mb-3 transition"
+        >
+          Calcular
+        </button>
+
+        <button
+          id="exponencial-graph-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Mostrar gráfico
+        </button>
+
+        <!-- Resultados -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-bold text-gray-700 mb-3">Resultados</h3>
+          <p class="text-sm font-mono">
+            E[X]: <span id="exponencial-result-ex" class="font-bold">---</span>
+          </p>
+          <p class="text-sm font-mono">
+            Var(X):
+            <span id="exponencial-result-varx" class="font-bold">---</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- MODAL INFO -->
+      <div
+        id="modal-exponencial-info"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 relative transform transition-all duration-300 scale-95"
+        >
+          <button
+            id="modal-exponencial-info-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-3 text-center">
+            Distribución Exponencial
+          </h3>
+          <p class="text-gray-700 mb-4 text-justify">
+            La distribución <strong>Exponencial</strong> modela el tiempo entre
+            eventos. Se define por su parámetro λ (tasa).
+          </p>
+          <div class="border-t pt-3 text-center">
+            <h4 class="font-semibold text-gray-800 mb-2">
+              Función de Densidad
+            </h4>
+            <p class="text-sm font-mono">f(x) = λ * e^(-λx), x ≥ 0</p>
+          </div>
+          <div class="mt-4 text-center">
+            <p class="font-mono">E[X] = 1/λ</p>
+            <p class="font-mono">Var(X) = 1/λ²</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL GRÁFICO -->
+      <div
+        id="modal-exponencial-graph"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 relative"
+        >
+          <button
+            id="modal-exponencial-graph-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-4">
+            Gráfico Exponencial
+          </h3>
+          <canvas id="exponencialChart" class="w-full h-64"></canvas>
+        </div>
+      </div>
+
+      <!-- CARD LOG-NORMAL -->
+      <div
+        id="card-lognormal"
+        class="card bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-200 flex flex-col h-full mt-10"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center mb-5 pb-3 border-b border-gray-200"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
+            Distribución Log-Normal
+          </h2>
+          <button
+            id="lognormal-info-btn"
+            class="text-red-600 hover:text-red-700 transition-colors text-xl"
+          >
+            ℹ️
+          </button>
+        </div>
+        <!-- Ejemplos -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Cargar ejemplo
+          </label>
+          <select
+            id="lognormal-ejemplos-select"
+            onchange="controlLogNormal('ejemplo')"
+            class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500 p-2 bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+            <option value="lognormal-1">
+              Tiempo de vida útil: P(X ≤ 1000) con μ=6.5, σ=0.4
+            </option>
+            <option value="lognormal-2">
+              Ingreso: P(X ≥ 35000) con μ=10.0, σ=0.8
+            </option>
+            <option value="lognormal-3">
+              Densidad en f(10) con μ=2.0, σ=1.0
+            </option>
+          </select>
+        </div>
+
+        <!-- Inputs -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Media logarítmica (μ)</label
+            >
+            <input
+              id="lognormal-input-mu"
+              type="number"
+              step="0.01"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Desviación logarítmica (σ)</label
+            >
+            <input
+              id="lognormal-input-sigma"
+              type="number"
+              step="0.01"
+              min="0.001"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Tipo de probabilidad</label
+            >
+            <select
+              id="lognormal-input-type"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            >
+              <option value="less">P(X ≤ x)</option>
+              <option value="greater">P(X ≥ x)</option>
+              <option value="density">Densidad f(x)</option>
+            </select>
+          </div>
+
+          <div id="lognormal-input-x-group">
+            <label class="text-sm font-semibold text-gray-700">Valor x</label>
+            <input
+              id="lognormal-input-x"
+              type="number"
+              step="0.01"
+              placeholder="Valor x"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+        </div>
+
+        <!-- Resultado -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700"
+            >Resultado</label
+          >
+          <input
+            id="lognormal-result-prob"
+            readonly
+            class="mt-1 w-full bg-gray-100 text-gray-900 font-mono p-2 rounded-lg border border-gray-200"
+            placeholder="P o f(x)"
+          />
+        </div>
+
+        <!-- Buttons -->
+        <button
+          id="lognormal-calc-btn"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg mb-3 transition"
+        >
+          Calcular
+        </button>
+
+        <button
+          id="lognormal-graph-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Mostrar gráfico
+        </button>
+
+        <!-- Resultados -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-bold text-gray-700 mb-3">Resultados</h3>
+          <p class="text-sm font-mono">
+            E[X]: <span id="lognormal-result-ex" class="font-bold">---</span>
+          </p>
+          <p class="text-sm font-mono">
+            Var(X):
+            <span id="lognormal-result-varx" class="font-bold">---</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- MODAL INFO -->
+      <div
+        id="modal-lognormal-info"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 relative transform transition-all duration-300 scale-95"
+        >
+          <button
+            id="modal-lognormal-info-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-3 text-center">
+            Distribución Log-Normal
+          </h3>
+          <p class="text-gray-700 mb-4 text-justify">
+            La distribución <strong>Log-Normal</strong> es aquella donde el
+            logaritmo de la variable sigue una distribución normal. Se define
+            por los parámetros μ y σ.
+          </p>
+          <div class="border-t pt-3 text-center">
+            <h4 class="font-semibold text-gray-800 mb-2">
+              Función de Densidad
+            </h4>
+            <p class="text-sm font-mono">
+              f(x) = (1 / (xσ√2π)) * exp(-(ln(x) - μ)² / (2σ²)), x > 0
+            </p>
+          </div>
+          <div class="mt-4 text-center">
+            <p class="font-mono">E[X] = exp(μ + σ²/2)</p>
+            <p class="font-mono">Var(X) = (exp(σ²) - 1) * exp(2μ + σ²)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL GRÁFICO -->
+      <div
+        id="modal-lognormal-graph"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 relative"
+        >
+          <button
+            id="modal-lognormal-graph-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-4">
+            Gráfico Log-Normal
+          </h3>
+          <canvas id="lognormalChart" class="w-full h-64"></canvas>
+        </div>
+      </div>
+
+      <!-- CARD GAMMA -->
+      <div
+        id="card-gamma"
+        class="card bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-200 flex flex-col h-full mt-10"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center mb-5 pb-3 border-b border-gray-200"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
+            Distribución Gamma
+          </h2>
+          <button
+            id="gamma-info-btn"
+            class="text-red-600 hover:text-red-700 transition-colors text-xl"
+          >
+            ℹ️
+          </button>
+        </div>
+        <!-- Ejemplos -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Cargar ejemplo
+          </label>
+          <select
+            id="gamma-ejemplos-select"
+            onchange="controlGamma('ejemplo')"
+            class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500 p-2 bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+            <option value="gamma-1">
+              Tiempo acumulado: P(X ≤ 15) con Forma (α)=5, Tasa (β)=0.2
+            </option>
+            <option value="gamma-2">
+              Tiempo de espera: P(X ≥ 8) con Forma (α)=2.5, Tasa (β)=0.5
+            </option>
+            <option value="gamma-3">
+              Densidad: f(5). (Comprueba el caso Exponencial α=1)
+            </option>
+          </select>
+        </div>
+
+        <!-- Inputs -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Parámetro α (shape)</label
+            >
+            <input
+              id="gamma-input-alpha"
+              type="number"
+              step="0.01"
+              min="0.001"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Parámetro β (rate)</label
+            >
+            <input
+              id="gamma-input-beta"
+              type="number"
+              step="0.01"
+              min="0.001"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Tipo de probabilidad</label
+            >
+            <select
+              id="gamma-input-type"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            >
+              <option value="less">P(X ≤ x)</option>
+              <option value="greater">P(X ≥ x)</option>
+              <option value="density">Densidad f(x)</option>
+            </select>
+          </div>
+
+          <div id="gamma-input-x-group">
+            <label class="text-sm font-semibold text-gray-700">Valor x</label>
+            <input
+              id="gamma-input-x"
+              type="number"
+              step="0.01"
+              placeholder="Valor x"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+        </div>
+
+        <!-- Resultado -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700"
+            >Resultado</label
+          >
+          <input
+            id="gamma-result-prob"
+            readonly
+            class="mt-1 w-full bg-gray-100 text-gray-900 font-mono p-2 rounded-lg border border-gray-200"
+            placeholder="P o f(x)"
+          />
+        </div>
+
+        <!-- Buttons -->
+        <button
+          id="gamma-calc-btn"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg mb-3 transition"
+        >
+          Calcular
+        </button>
+
+        <button
+          id="gamma-graph-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Mostrar gráfico
+        </button>
+
+        <!-- Resultados -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-bold text-gray-700 mb-3">Resultados</h3>
+          <p class="text-sm font-mono">
+            E[X]: <span id="gamma-result-ex" class="font-bold">---</span>
+          </p>
+          <p class="text-sm font-mono">
+            Var(X): <span id="gamma-result-varx" class="font-bold">---</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- MODAL INFO -->
+      <div
+        id="modal-gamma-info"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 relative transform transition-all duration-300 scale-95"
+        >
+          <button
+            id="modal-gamma-info-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-3 text-center">
+            Distribución Gamma
+          </h3>
+          <p class="text-gray-700 mb-4 text-justify">
+            La distribución <strong>Gamma</strong> describe el tiempo hasta α
+            eventos en un proceso de Poisson. Se define por los parámetros α
+            (shape) y β (rate).
+          </p>
+          <div class="border-t pt-3 text-center">
+            <h4 class="font-semibold text-gray-800 mb-2">
+              Función de Densidad
+            </h4>
+            <p class="text-sm font-mono">
+              f(x) = (β^α / Γ(α)) * x^(α-1) * e^(-βx), x > 0
+            </p>
+          </div>
+          <div class="mt-4 text-center">
+            <p class="font-mono">E[X] = α / β</p>
+            <p class="font-mono">Var(X) = α / β²</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL GRÁFICO -->
+      <div
+        id="modal-gamma-graph"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 relative"
+        >
+          <button
+            id="modal-gamma-graph-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-4">Gráfico Gamma</h3>
+          <canvas id="gammaChart" class="w-full h-64"></canvas>
+        </div>
+      </div>
+
+      <!-- CARD BETA -->
+      <div
+        id="card-beta"
+        class="card bg-white p-6 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-200 flex flex-col h-full mt-10"
+      >
+        <!-- Header -->
+        <div
+          class="flex justify-between items-center mb-5 pb-3 border-b border-gray-200"
+        >
+          <h2 class="text-2xl font-bold text-gray-800 tracking-tight">
+            Distribución Beta
+          </h2>
+          <button
+            id="beta-info-btn"
+            class="text-red-600 hover:text-red-700 transition-colors text-xl"
+          >
+            ℹ️
+          </button>
+        </div>
+        <!-- Ejemplos -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700 mb-2">
+            Cargar ejemplo
+          </label>
+          <select
+            id="beta-ejemplos-select"
+            onchange="controlBeta('ejemplo')"
+            class="w-full rounded-lg border-gray-300 focus:border-red-500 focus:ring-red-500 p-2 bg-gray-50 hover:bg-gray-100 transition"
+          >
+            <option value="" selected disabled>Selecciona un ejemplo</option>
+            <option value="beta-1">
+              Prob. de Éxito: P(X ≤ 0.80) con α=9, β=3
+            </option>
+            <option value="beta-2">
+              Distribución Simétrica: P(X ≥ 0.60) con α=2, β=2
+            </option>
+            <option value="beta-3">
+              Densidad: f(0.25) con α=0.5, β=0.5 (Forma de U)
+            </option>
+          </select>
+        </div>
+
+        <!-- Inputs -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Parámetro α</label
+            >
+            <input
+              id="beta-input-alpha"
+              type="number"
+              step="0.01"
+              min="0.001"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Parámetro β</label
+            >
+            <input
+              id="beta-input-beta"
+              type="number"
+              step="0.01"
+              min="0.001"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+
+          <div>
+            <label class="text-sm font-semibold text-gray-700"
+              >Tipo de probabilidad</label
+            >
+            <select
+              id="beta-input-type"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            >
+              <option value="less">P(X ≤ x)</option>
+              <option value="greater">P(X ≥ x)</option>
+              <option value="density">Densidad f(x)</option>
+            </select>
+          </div>
+
+          <div id="beta-input-x-group">
+            <label class="text-sm font-semibold text-gray-700">Valor x</label>
+            <input
+              id="beta-input-x"
+              type="number"
+              step="0.01"
+              placeholder="Valor x (0 ≤ x ≤ 1)"
+              class="mt-1 w-full rounded-lg border-gray-300 p-2 bg-gray-50 hover:bg-gray-100 focus:border-red-500 focus:ring-red-500"
+            />
+          </div>
+        </div>
+
+        <!-- Resultado -->
+        <div class="mb-5">
+          <label class="block text-sm font-semibold text-gray-700"
+            >Resultado</label
+          >
+          <input
+            id="beta-result-prob"
+            readonly
+            class="mt-1 w-full bg-gray-100 text-gray-900 font-mono p-2 rounded-lg border border-gray-200"
+            placeholder="P o f(x)"
+          />
+        </div>
+
+        <!-- Buttons -->
+        <button
+          id="beta-calc-btn"
+          class="w-full bg-red-600 hover:bg-red-700 text-white font-semibold py-2 rounded-lg mb-3 transition"
+        >
+          Calcular
+        </button>
+
+        <button
+          id="beta-graph-btn"
+          class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition"
+        >
+          Mostrar gráfico
+        </button>
+
+        <!-- Resultados -->
+        <div class="mt-6 pt-4 border-t border-gray-200">
+          <h3 class="text-lg font-bold text-gray-700 mb-3">Resultados</h3>
+          <p class="text-sm font-mono">
+            E[X]: <span id="beta-result-ex" class="font-bold">---</span>
+          </p>
+          <p class="text-sm font-mono">
+            Var(X): <span id="beta-result-varx" class="font-bold">---</span>
+          </p>
+        </div>
+      </div>
+
+      <!-- MODAL INFO -->
+      <div
+        id="modal-beta-info"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-1/2 relative transform transition-all duration-300 scale-95"
+        >
+          <button
+            id="modal-beta-info-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-3 text-center">
+            Distribución Beta
+          </h3>
+          <p class="text-gray-700 mb-4 text-justify">
+            La distribución <strong>Beta</strong> es continua y definida en
+            [0,1], utilizada para modelar proporciones y probabilidades. Sus
+            parámetros α y β controlan la forma.
+          </p>
+          <div class="border-t pt-3 text-center">
+            <h4 class="font-semibold text-gray-800 mb-2">
+              Función de Densidad
+            </h4>
+            <p class="text-sm font-mono">
+              f(x) = x^(α-1) * (1-x)^(β-1) / B(α, β), 0 ≤ x ≤ 1
+            </p>
+          </div>
+          <div class="mt-4 text-center">
+            <p class="font-mono">E[X] = α / (α + β)</p>
+            <p class="font-mono">Var(X) = αβ / ((α + β)² (α + β + 1))</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL GRÁFICO -->
+      <div
+        id="modal-beta-graph"
+        class="modal hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-2/3 relative"
+        >
+          <button
+            id="modal-beta-graph-close"
+            class="absolute top-2 right-3 text-gray-500 text-xl hover:text-gray-700"
+          >
+            &times;
+          </button>
+          <h3 class="text-2xl font-bold text-red-700 mb-4">Gráfico Beta</h3>
+          <canvas id="betaChart" class="w-full h-64"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <script src="./js/continuas.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </body>
+</html>

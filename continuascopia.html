@@ -1,0 +1,653 @@
+    <!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Distribuciones Continuas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjs@11.8.0/lib/browser/math.min.js"></script>
+    <script src="./index.js" defer></script>
+
+    <style>
+        .input-group input, .input-group select { 
+            width: 100%; 
+            padding: 8px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            font-size: 0.875rem;
+        }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4); }
+        .modal-content { background-color: #fefefe; margin: 5% auto; padding: 25px; border-radius: 8px; width: 90%; max-width: 600px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); }
+        .close-btn { color: #aaa; float: right; font-size: 30px; font-weight: bold; }
+        .close-btn:hover { color: #000; cursor: pointer; }
+        .example-btn { 
+            background-color: #3b82f6; 
+            color: white; 
+            padding: 4px 8px; 
+            border-radius: 4px; 
+            font-size: 0.75rem; 
+            margin-left: 8px;
+        }
+        .example-btn:hover {
+            background-color: #2563eb;
+        }
+        .probability-options {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .probability-option {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9fafb;
+        }
+        .probability-option.selected {
+            border-color: #3b82f6;
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .interval-inputs {
+            display: none;
+        }
+        .single-input {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 p-6">
+    <div id="navBar"></div>
+    <div class="mt-16">
+        <h1 class="text-4xl font-extrabold text-center text-blue-800 mb-8 border-b pb-3">
+            Calculadora de Distribuciones Continuas
+        </h1>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Distribución Uniforme -->
+            <div id="card-uniforme" class="card bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 class="text-2xl font-bold text-gray-800">Uniforme</h2>
+                    <div>
+                        <button id="uniforme-info-btn" data-info-key="uniforme" class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl">
+                            ℹ️
+                        </button>
+                        <button class="example-btn" onclick="cargarEjemploUniforme()">Ejemplo</button>
+                    </div>
+                </div>
+                <div class="space-y-3 mb-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-700">Límite inferior (a)</label>
+                            <input type="number" step="0.01" id="uniforme-input-a" class="mt-1 block w-full">
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-700">Límite superior (b)</label>
+                            <input type="number" step="0.01" id="uniforme-input-b" class="mt-1 block w-full">
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones de probabilidad -->
+                    <div class="probability-options">
+                        <div class="probability-option selected" data-type="interval" onclick="selectProbabilityOption('uniforme', 'interval')">
+                            P(a ≤ X ≤ b)
+                        </div>
+                        <div class="probability-option" data-type="less" onclick="selectProbabilityOption('uniforme', 'less')">
+                            P(X < x)
+                        </div>
+                        <div class="probability-option" data-type="greater" onclick="selectProbabilityOption('uniforme', 'greater')">
+                            P(X > x)
+                        </div>
+                    </div>
+
+                    <!-- Inputs para intervalo -->
+                    <div id="uniforme-interval-inputs" class="interval-inputs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="input-group">
+                                <label class="block text-sm font-medium text-gray-700">Límite inferior</label>
+                                <input type="number" step="0.01" id="uniforme-input-x1" class="mt-1 block w-full">
+                            </div>
+                            <div class="input-group">
+                                <label class="block text-sm font-medium text-gray-700">Límite superior</label>
+                                <input type="number" step="0.01" id="uniforme-input-x2" class="mt-1 block w-full">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inputs para colas -->
+                    <div id="uniforme-single-input" class="single-input">
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-700" id="uniforme-single-label">Valor de x</label>
+                            <input type="number" step="0.01" id="uniforme-input-x" class="mt-1 block w-full">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4 mb-4">
+                    <div class="flex-grow">
+                        <label class="block text-sm font-medium text-gray-700">Densidad f(x)</label>
+                        <input type="text" id="uniforme-result-fx" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="f(x)">
+                    </div>
+                    <div class="flex-grow">
+                        <label class="block text-sm font-medium text-gray-700" id="uniforme-prob-label">Probabilidad</label>
+                        <input type="text" id="uniforme-result-px" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="P">
+                    </div>
+                </div>
+                <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150" id="uniforme-calc-btn">
+                    Calcular
+                </button>
+                <div class="mt-4 pt-4 border-t flex-grow">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Resultados:</h3>
+                    <p class="text-sm font-mono text-gray-900">E[X]: <span id="uniforme-result-ex" class="font-bold">---</span></p>
+                    <p class="text-sm font-mono text-gray-900">Var(X): <span id="uniforme-result-varx" class="font-bold">---</span></p>
+                </div>
+            </div>
+
+            <!-- Distribución Normal -->
+            <div id="card-normal" class=" card bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full">
+                <div class="flex justify-between items-center mb-4 border-b pb-2">
+                    <h2 class="text-2xl font-bold text-gray-800">Normal</h2>
+                    <div>
+                        <button id="normal-info-btn" data-info-key="normal" class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl">
+                            ℹ️
+                        </button>
+                        <button class="example-btn" onclick="cargarEjemploNormal()">Ejemplo</button>
+                    </div>
+                </div>
+                <div class="space-y-3 mb-4">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-700">Media (μ)</label>
+                            <input type="number" step="0.01" id="normal-input-mu" class="mt-1 block w-full">
+                        </div>
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-700">Desviación (σ)</label>
+                            <input type="number" step="0.01" min="0.001" id="normal-input-sigma" class="mt-1 block w-full">
+                        </div>
+                    </div>
+                    
+                    <!-- Opciones de probabilidad -->
+                    <div class="probability-options">
+                        <div class="probability-option selected" data-type="interval" onclick="selectProbabilityOption('normal', 'interval')">
+                            P(a ≤ X ≤ b)
+                        </div>
+                        <div class="probability-option" data-type="less" onclick="selectProbabilityOption('normal', 'less')">
+                            P(X < x)
+                        </div>
+                        <div class="probability-option" data-type="greater" onclick="selectProbabilityOption('normal', 'greater')">
+                            P(X > x)
+                        </div>
+                    </div>
+
+                    <!-- Inputs para intervalo -->
+                    <div id="normal-interval-inputs" class="interval-inputs">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="input-group">
+                                <label class="block text-sm font-medium text-gray-700">Límite inferior</label>
+                                <input type="number" step="0.01" id="normal-input-x1" class="mt-1 block w-full">
+                            </div>
+                            <div class="input-group">
+                                <label class="block text-sm font-medium text-gray-700">Límite superior</label>
+                                <input type="number" step="0.01" id="normal-input-x2" class="mt-1 block w-full">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inputs para colas -->
+                    <div id="normal-single-input" class="single-input">
+                        <div class="input-group">
+                            <label class="block text-sm font-medium text-gray-700" id="normal-single-label">Valor de x</label>
+                            <input type="number" step="0.01" id="normal-input-x" class="mt-1 block w-full">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4 mb-4">
+                    <div class="flex-grow">
+                        <label class="block text-sm font-medium text-gray-700">Densidad f(x)</label>
+                        <input type="text" id="normal-result-fx" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="f(x)">
+                    </div>
+                    <div class="flex-grow">
+                        <label class="block text-sm font-medium text-gray-700" id="normal-prob-label">Probabilidad</label>
+                        <input type="text" id="normal-result-px" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="P">
+                    </div>
+                </div>
+                <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150" id="normal-calc-btn">
+                    Calcular
+                </button>
+                <div class="mt-4 pt-4 border-t flex-grow">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-2">Resultados:</h3>
+                    <p class="text-sm font-mono text-gray-900">E[X]: <span id="normal-result-ex" class="font-bold">---</span></p>
+                    <p class="text-sm font-mono text-gray-900">Var(X): <span id="normal-result-varx" class="font-bold">---</span></p>
+                </div>
+            </div>
+
+            <!-- Distribución Exponencial -->
+<div id="card-exponencial" class=" card bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full">
+    <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h2 class="text-2xl font-bold text-gray-800">Exponencial</h2>
+        <div>
+            <button id="exponencial-info-btn" data-info-key="exponencial" class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl">
+                ℹ️
+            </button>
+            <button class="example-btn" onclick="cargarEjemploExponencial()">Ejemplo</button>
+        </div>
+    </div>
+    <div class="space-y-3 mb-4">
+        <div class="input-group">
+            <label class="block text-sm font-medium text-gray-700">Tasa (λ)</label>
+            <input type="number" step="0.01" min="0.001" id="exponencial-input-lambda" class="mt-1 block w-full">
+        </div>
+        
+        <!-- Opciones de probabilidad -->
+        <div class="probability-options">
+            <div class="probability-option selected" data-type="interval" onclick="selectProbabilityOption('exponencial', 'interval')">
+                P(a ≤ X ≤ b)
+            </div>
+            <div class="probability-option" data-type="less" onclick="selectProbabilityOption('exponencial', 'less')">
+                P(X < x)
+            </div>
+            <div class="probability-option" data-type="greater" onclick="selectProbabilityOption('exponencial', 'greater')">
+                P(X > x)
+            </div>
+        </div>
+
+        <!-- Inputs para intervalo -->
+        <div id="exponencial-interval-inputs" class="interval-inputs">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite inferior</label>
+                    <input type="number" step="0.01" min="0" id="exponencial-input-x1" class="mt-1 block w-full">
+                </div>
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite superior</label>
+                    <input type="number" step="0.01" min="0" id="exponencial-input-x2" class="mt-1 block w-full">
+                </div>
+            </div>
+        </div>
+
+        <!-- Inputs para colas -->
+        <div id="exponencial-single-input" class="single-input">
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700" id="exponencial-single-label">Valor de x</label>
+                <input type="number" step="0.01" min="0" id="exponencial-input-x" class="mt-1 block w-full">
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex space-x-4 mb-4">
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700">Densidad f(x)</label>
+            <input type="text" id="exponencial-result-fx" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="f(x)">
+        </div>
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700" id="exponencial-prob-label">Probabilidad</label>
+            <input type="text" id="exponencial-result-px" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="P">
+        </div>
+    </div>
+    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150" id="exponencial-calc-btn">
+        Calcular
+    </button>
+    <div class="mt-4 pt-4 border-t flex-grow">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Resultados:</h3>
+        <p class="text-sm font-mono text-gray-900">E[X]: <span id="exponencial-result-ex" class="font-bold">---</span></p>
+        <p class="text-sm font-mono text-gray-900">Var(X): <span id="exponencial-result-varx" class="font-bold">---</span></p>
+    </div>
+</div>
+
+<!-- Distribución Log-Normal -->
+<div id="card-lognormal" class="card bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full">
+    <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h2 class="text-2xl font-bold text-gray-800">Log-Normal</h2>
+        <div>
+            <button id="lognormal-info-btn" data-info-key="lognormal" class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl">
+                ℹ️
+            </button>
+            <button class="example-btn" onclick="cargarEjemploLognormal()">Ejemplo</button>
+        </div>
+    </div>
+    <div class="space-y-3 mb-4">
+        <div class="grid grid-cols-2 gap-3">
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700">Media (μ)</label>
+                <input type="number" step="0.01" id="lognormal-input-mu" class="mt-1 block w-full">
+            </div>
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700">Desviación (σ)</label>
+                <input type="number" step="0.01" min="0.001" id="lognormal-input-sigma" class="mt-1 block w-full">
+            </div>
+        </div>
+        
+        <!-- Opciones de probabilidad -->
+        <div class="probability-options">
+            <div class="probability-option selected" data-type="interval" onclick="selectProbabilityOption('lognormal', 'interval')">
+                P(a ≤ X ≤ b)
+            </div>
+            <div class="probability-option" data-type="less" onclick="selectProbabilityOption('lognormal', 'less')">
+                P(X < x)
+            </div>
+            <div class="probability-option" data-type="greater" onclick="selectProbabilityOption('lognormal', 'greater')">
+                P(X > x)
+            </div>
+        </div>
+
+        <!-- Inputs para intervalo -->
+        <div id="lognormal-interval-inputs" class="interval-inputs">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite inferior</label>
+                    <input type="number" step="0.01" min="0.001" id="lognormal-input-x1" class="mt-1 block w-full">
+                </div>
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite superior</label>
+                    <input type="number" step="0.01" min="0.001" id="lognormal-input-x2" class="mt-1 block w-full">
+                </div>
+            </div>
+        </div>
+
+        <!-- Inputs para colas -->
+        <div id="lognormal-single-input" class="single-input">
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700" id="lognormal-single-label">Valor de x</label>
+                <input type="number" step="0.01" min="0.001" id="lognormal-input-x" class="mt-1 block w-full">
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex space-x-4 mb-4">
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700">Densidad f(x)</label>
+            <input type="text" id="lognormal-result-fx" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="f(x)">
+        </div>
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700" id="lognormal-prob-label">Probabilidad</label>
+            <input type="text" id="lognormal-result-px" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="P">
+        </div>
+    </div>
+    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150" id="lognormal-calc-btn">
+        Calcular
+    </button>
+    <div class="mt-4 pt-4 border-t flex-grow">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Resultados:</h3>
+        <p class="text-sm font-mono text-gray-900">E[X]: <span id="lognormal-result-ex" class="font-bold">---</span></p>
+        <p class="text-sm font-mono text-gray-900">Var(X): <span id="lognormal-result-varx" class="font-bold">---</span></p>
+    </div>
+</div>
+
+<!-- Distribución Gamma -->
+<div id="card-gamma" class="card bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full">
+    <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h2 class="text-2xl font-bold text-gray-800">Gamma</h2>
+        <div>
+            <button id="gamma-info-btn" data-info-key="gamma" class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl">
+                ℹ️
+            </button>
+            <button class="example-btn" onclick="cargarEjemploGamma()">Ejemplo</button>
+        </div>
+    </div>
+    <div class="space-y-3 mb-4">
+        <div class="grid grid-cols-2 gap-3">
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700">Forma (α)</label>
+                <input type="number" step="0.01" min="0.001" id="gamma-input-alpha" class="mt-1 block w-full">
+            </div>
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700">Tasa (β)</label>
+                <input type="number" step="0.01" min="0.001" id="gamma-input-beta" class="mt-1 block w-full">
+            </div>
+        </div>
+        
+        <!-- Opciones de probabilidad -->
+        <div class="probability-options">
+            <div class="probability-option selected" data-type="interval" onclick="selectProbabilityOption('gamma', 'interval')">
+                P(a ≤ X ≤ b)
+            </div>
+            <div class="probability-option" data-type="less" onclick="selectProbabilityOption('gamma', 'less')">
+                P(X < x)
+            </div>
+            <div class="probability-option" data-type="greater" onclick="selectProbabilityOption('gamma', 'greater')">
+                P(X > x)
+            </div>
+        </div>
+
+        <!-- Inputs para intervalo -->
+        <div id="gamma-interval-inputs" class="interval-inputs">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite inferior</label>
+                    <input type="number" step="0.01" min="0" id="gamma-input-x1" class="mt-1 block w-full">
+                </div>
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite superior</label>
+                    <input type="number" step="0.01" min="0" id="gamma-input-x2" class="mt-1 block w-full">
+                </div>
+            </div>
+        </div>
+
+        <!-- Inputs para colas -->
+        <div id="gamma-single-input" class="single-input">
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700" id="gamma-single-label">Valor de x</label>
+                <input type="number" step="0.01" min="0" id="gamma-input-x" class="mt-1 block w-full">
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex space-x-4 mb-4">
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700">Densidad f(x)</label>
+            <input type="text" id="gamma-result-fx" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="f(x)">
+        </div>
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700" id="gamma-prob-label">Probabilidad</label>
+            <input type="text" id="gamma-result-px" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="P">
+        </div>
+    </div>
+    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150" id="gamma-calc-btn">
+        Calcular
+    </button>
+    <div class="mt-4 pt-4 border-t flex-grow">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Resultados:</h3>
+        <p class="text-sm font-mono text-gray-900">E[X]: <span id="gamma-result-ex" class="font-bold">---</span></p>
+        <p class="text-sm font-mono text-gray-900">Var(X): <span id="gamma-result-varx" class="font-bold">---</span></p>
+    </div>
+</div>
+
+<!-- Distribución Beta -->
+<div id="card-beta" class="card bg-white p-6 rounded-lg shadow-xl border-t-4 border-blue-500 flex flex-col h-full">
+    <div class="flex justify-between items-center mb-4 border-b pb-2">
+        <h2 class="text-2xl font-bold text-gray-800">Beta</h2>
+        <div>
+            <button id="beta-info-btn" data-info-key="beta" class="btn-info text-green-600 hover:text-green-800 transition-colors duration-200 text-xl">
+                ℹ️
+            </button>
+            <button class="example-btn" onclick="cargarEjemploBeta()">Ejemplo</button>
+        </div>
+    </div>
+    <div class="space-y-3 mb-4">
+        <div class="grid grid-cols-2 gap-3">
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700">Parámetro α</label>
+                <input type="number" step="0.01" min="0.001" id="beta-input-alpha" class="mt-1 block w-full">
+            </div>
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700">Parámetro β</label>
+                <input type="number" step="0.01" min="0.001" id="beta-input-beta" class="mt-1 block w-full">
+            </div>
+        </div>
+        
+        <!-- Opciones de probabilidad -->
+        <div class="probability-options">
+            <div class="probability-option selected" data-type="interval" onclick="selectProbabilityOption('beta', 'interval')">
+                P(a ≤ X ≤ b)
+            </div>
+            <div class="probability-option" data-type="less" onclick="selectProbabilityOption('beta', 'less')">
+                P(X < x)
+            </div>
+            <div class="probability-option" data-type="greater" onclick="selectProbabilityOption('beta', 'greater')">
+                P(X > x)
+            </div>
+        </div>
+
+        <!-- Inputs para intervalo -->
+        <div id="beta-interval-inputs" class="interval-inputs">
+            <div class="grid grid-cols-2 gap-3">
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite inferior</label>
+                    <input type="number" step="0.01" min="0" max="1" id="beta-input-x1" class="mt-1 block w-full">
+                </div>
+                <div class="input-group">
+                    <label class="block text-sm font-medium text-gray-700">Límite superior</label>
+                    <input type="number" step="0.01" min="0" max="1" id="beta-input-x2" class="mt-1 block w-full">
+                </div>
+            </div>
+        </div>
+
+        <!-- Inputs para colas -->
+        <div id="beta-single-input" class="single-input">
+            <div class="input-group">
+                <label class="block text-sm font-medium text-gray-700" id="beta-single-label">Valor de x</label>
+                <input type="number" step="0.01" min="0" max="1" id="beta-input-x" class="mt-1 block w-full">
+            </div>
+        </div>
+    </div>
+    
+    <div class="flex space-x-4 mb-4">
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700">Densidad f(x)</label>
+            <input type="text" id="beta-result-fx" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="f(x)">
+        </div>
+        <div class="flex-grow">
+            <label class="block text-sm font-medium text-gray-700" id="beta-prob-label">Probabilidad</label>
+            <input type="text" id="beta-result-px" class="mt-1 block w-full bg-gray-100 text-gray-800 font-mono" readonly placeholder="P">
+        </div>
+    </div>
+    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-150" id="beta-calc-btn">
+        Calcular
+    </button>
+    <div class="mt-4 pt-4 border-t flex-grow">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Resultados:</h3>
+        <p class="text-sm font-mono text-gray-900">E[X]: <span id="beta-result-ex" class="font-bold">---</span></p>
+        <p class="text-sm font-mono text-gray-900">Var(X): <span id="beta-result-varx" class="font-bold">---</span></p>
+    </div>
+</div>
+    
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModalBtn">&times;</span>
+            <h3 id="modalTitle" class="text-2xl font-bold text-blue-700 mb-3"></h3>
+            <p id="modalText" class="text-gray-700 mb-4"></p>
+            <div id="modalFormula" class="text-center font-mono"></div>
+            <div id="modalEX" class="text-center font-mono mt-3"></div>
+            <div id="modalVarX" class="text-center font-mono mt-1"></div>
+        </div>
+    </div>
+    
+    </script>
+
+    <script src="./js/distribucionesC.js"></script>
+    <script>
+        // Funciones para manejar las opciones de probabilidad
+        function selectProbabilityOption(distribution, type) {
+            // Remover selección de todas las opciones
+            document.querySelectorAll(`#card-${distribution} .probability-option`).forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seleccionar la opción clickeada
+            event.target.classList.add('selected');
+            
+            // Mostrar/ocultar inputs según el tipo
+            const intervalInputs = document.getElementById(`${distribution}-interval-inputs`);
+            const singleInput = document.getElementById(`${distribution}-single-input`);
+            const singleLabel = document.getElementById(`${distribution}-single-label`);
+            const probLabel = document.getElementById(`${distribution}-prob-label`);
+            
+            if (type === 'interval') {
+                intervalInputs.style.display = 'block';
+                singleInput.style.display = 'none';
+                probLabel.textContent = 'Probabilidad P(x₁ ≤ X ≤ x₂)';
+            } else {
+                intervalInputs.style.display = 'none';
+                singleInput.style.display = 'block';
+                if (type === 'less') {
+                    singleLabel.textContent = 'Valor de x';
+                    probLabel.textContent = 'Probabilidad P(X < x)';
+                } else {
+                    singleLabel.textContent = 'Valor de x';
+                    probLabel.textContent = 'Probabilidad P(X > x)';
+                }
+            }
+        }
+
+        // Funciones para cargar ejemplos
+        function cargarEjemploUniforme() {
+            document.getElementById('uniforme-input-a').value = 2;
+            document.getElementById('uniforme-input-b').value = 8;
+            selectProbabilityOption('uniforme', 'interval');
+            document.getElementById('uniforme-input-x1').value = 3;
+            document.getElementById('uniforme-input-x2').value = 5;
+            calcularUniforme();
+        }
+
+        function cargarEjemploNormal() {
+            document.getElementById('normal-input-mu').value = 170;
+            document.getElementById('normal-input-sigma').value = 6;
+            selectProbabilityOption('normal', 'greater');
+            document.getElementById('normal-input-x').value = 180;
+            calcularNormal();
+        }
+
+        // Inicializar todas las distribuciones con intervalo por defecto
+        document.addEventListener('DOMContentLoaded', function() {
+            const distributions = ['uniforme', 'normal', 'exponencial', 'lognormal', 'gamma', 'beta'];
+            distributions.forEach(dist => {
+                selectProbabilityOption(dist, 'interval');
+            });
+        });
+    </script>
+
+    <script>
+    // Funciones para cargar ejemplos de las distribuciones faltantes
+    function cargarEjemploExponencial() {
+        document.getElementById('exponencial-input-lambda').value = 0.5;
+        selectProbabilityOption('exponencial', 'greater');
+        document.getElementById('exponencial-input-x').value = 2;
+        calcularExponencial();
+    }
+
+    function cargarEjemploLognormal() {
+        document.getElementById('lognormal-input-mu').value = 0;
+        document.getElementById('lognormal-input-sigma').value = 1;
+        selectProbabilityOption('lognormal', 'interval');
+        document.getElementById('lognormal-input-x1').value = 1;
+        document.getElementById('lognormal-input-x2').value = 2.7183;
+        calcularLognormal();
+    }
+
+    function cargarEjemploGamma() {
+        document.getElementById('gamma-input-alpha').value = 2;
+        document.getElementById('gamma-input-beta').value = 0.5;
+        selectProbabilityOption('gamma', 'interval');
+        document.getElementById('gamma-input-x1').value = 3;
+        document.getElementById('gamma-input-x2').value = 5;
+        calcularGamma();
+    }
+
+    function cargarEjemploBeta() {
+        document.getElementById('beta-input-alpha').value = 2;
+        document.getElementById('beta-input-beta').value = 5;
+        selectProbabilityOption('beta', 'interval');
+        document.getElementById('beta-input-x1').value = 0.3;
+        document.getElementById('beta-input-x2').value = 0.6;
+        calcularBeta();
+    }
+</script>
+
+</body>
+</html>
