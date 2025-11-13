@@ -92,12 +92,29 @@ function erf(z) {
 
 let normalChart = null;
 
-// =====================================
-// Función única: cálculo + gráfico
-// =====================================
+// ===============================
+// Mostrar/ocultar inputs según tipo
+// ===============================
+function updateNormalInputsVisibility() {
+  const tipo = document.getElementById("normal-input-type").value;
+  const xGroup = document.getElementById("normal-input-x-group");
+  const rangeGroup = document.getElementById("normal-input-range-group");
 
+  if (tipo === "between") {
+    xGroup.classList.add("hidden");
+    rangeGroup.classList.remove("hidden");
+  } else {
+    xGroup.classList.remove("hidden");
+    rangeGroup.classList.add("hidden");
+  }
+}
+
+document.getElementById("normal-input-type").addEventListener("change", updateNormalInputsVisibility);
+
+// ===============================
+// Control principal
+// ===============================
 function controlNormal(accion) {
-
   const modalInfo = document.getElementById("modal-normal-info");
   const modalGraph = document.getElementById("modal-normal-graph");
 
@@ -139,6 +156,9 @@ function controlNormal(accion) {
     document.getElementById("normal-input-a").value = ej.a || "";
     document.getElementById("normal-input-b").value = ej.b || "";
 
+    //  Forzar actualización de inputs visibles
+    document.getElementById("normal-input-type").dispatchEvent(new Event("change"));
+
     console.log("✅ Ejemplo Normal cargado:", ej.desc);
     return;
   }
@@ -152,11 +172,13 @@ function controlNormal(accion) {
   }
 }
 
+// ===============================
+// Función de cálculo + gráfico
+// ===============================
 function calcularYGraficarNormal() {
-  
-  // Abrir modal del gráfico
+  // Abrir modal del gráfico (si quieres que solo el botón gráfico lo abra, quita esta línea)
   document.getElementById("modal-normal-graph").classList.remove("hidden");
-  
+
   const mu = parseFloat(document.getElementById("normal-input-mu").value);
   const sigma = parseFloat(document.getElementById("normal-input-sigma").value);
   const tipo = document.getElementById("normal-input-type").value;
@@ -170,16 +192,13 @@ function calcularYGraficarNormal() {
   // ========== Cálculo ==========
   if (tipo === "less") resultado = normalCDF(x, mu, sigma);
   if (tipo === "greater") resultado = 1 - normalCDF(x, mu, sigma);
-  if (tipo === "between")
-    resultado = normalCDF(b, mu, sigma) - normalCDF(a, mu, sigma);
+  if (tipo === "between") resultado = normalCDF(b, mu, sigma) - normalCDF(a, mu, sigma);
   if (tipo === "density") resultado = normalPDF(x, mu, sigma);
 
   // Mostrar resultados
   document.getElementById("normal-result-prob").value = resultado.toFixed(6);
   document.getElementById("normal-result-ex").textContent = mu;
-  document.getElementById("normal-result-varx").textContent = (
-    sigma * sigma
-  ).toFixed(4);
+  document.getElementById("normal-result-varx").textContent = (sigma * sigma).toFixed(4);
 
   // ========== Datos para gráfico ==========
   const xs = [];
@@ -198,11 +217,9 @@ function calcularYGraficarNormal() {
     ys.push(pdf);
 
     let inside = false;
-
     if (tipo === "less" && v <= x) inside = true;
     if (tipo === "greater" && v >= x) inside = true;
     if (tipo === "between" && v >= a && v <= b) inside = true;
-    if (tipo === "density") inside = false;
 
     ysShade.push(inside ? pdf : null);
   }
@@ -243,14 +260,60 @@ function calcularYGraficarNormal() {
       },
     },
   });
-
 }
+
+// ===============================
+// Listeners de botones
+// ===============================
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("normal-calc-btn").addEventListener("click", () => {
+    controlNormal("calcular");
+  });
+
+  document.getElementById("normal-graph-btn").addEventListener("click", () => {
+    controlNormal("calcular"); 
+  });
+
+  document.getElementById("normal-info-btn").addEventListener("click", () => {
+    controlNormal("info");
+  });
+
+  document.getElementById("modal-normal-info-close").addEventListener("click", () => {
+    controlNormal("cerrar-info");
+  });
+
+  document.getElementById("modal-normal-graph-close").addEventListener("click", () => {
+    controlNormal("cerrar-grafico");
+  });
+
+  // Inicializar visibilidad de inputs
+  updateNormalInputsVisibility();
+});
+
 
 
 
 
 
 let uniformeChart = null;
+
+// -------------------------------
+// Mostrar/ocultar inputs según tipo
+// -------------------------------
+document.getElementById("uniforme-input-type").addEventListener("change", function () {
+  const tipo = this.value;
+  const xGroup = document.getElementById("uniforme-input-x-group");
+  const rangeGroup = document.getElementById("uniforme-input-range-group");
+
+  if (tipo === "between") {
+    xGroup.classList.add("hidden");      
+    rangeGroup.classList.remove("hidden"); 
+  } else {
+    xGroup.classList.remove("hidden");   
+    rangeGroup.classList.add("hidden");  
+  }
+});
+
 function controlUniforme(accion) {
   const modalInfo = document.getElementById("modal-uniforme-info");
   const modalGraph = document.getElementById("modal-uniforme-graph");
@@ -270,7 +333,6 @@ function controlUniforme(accion) {
 
   if (accion === "abrir-grafico") {
     modalGraph.classList.remove("hidden");
-    // No calculamos todavía, solo se abre el modal.
     return;
   }
 
@@ -278,6 +340,7 @@ function controlUniforme(accion) {
     modalGraph.classList.add("hidden");
     return;
   }
+
   // -------------------------------
   // CARGAR EJEMPLO DESDE SELECT
   // -------------------------------
@@ -294,8 +357,14 @@ function controlUniforme(accion) {
       const ej = ejemplosUniforme[key];
       document.getElementById("uniforme-input-a").value = ej.a;
       document.getElementById("uniforme-input-b").value = ej.b;
-      document.getElementById("uniforme-input-x").value = ej.x;
+      document.getElementById("uniforme-input-x").value = ej.x || "";
+      document.getElementById("uniforme-input-a2").value = ej.a2 || "";
+      document.getElementById("uniforme-input-b2").value = ej.b2 || "";
       document.getElementById("uniforme-input-type").value = ej.type;
+
+      //  Forzar actualización de inputs visibles
+      document.getElementById("uniforme-input-type").dispatchEvent(new Event("change"));
+
       console.log("Ejemplo cargado:", ej.desc);
     } else {
       console.warn("Ejemplo no encontrado en JSON");
@@ -303,6 +372,7 @@ function controlUniforme(accion) {
 
     return;
   }
+
   // -------------------------------
   // ACCIÓN: CALCULAR + GRAFICAR
   // -------------------------------
@@ -403,6 +473,7 @@ function controlUniforme(accion) {
     return;
   }
 }
+
 
 // ===============================
 // FUNCIONES MATEMÁTICAS
